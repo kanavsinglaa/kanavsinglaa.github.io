@@ -7,32 +7,32 @@ const Portfolio = () => {
   const portfolio_data= [
     {id: 1,
       title: 'Image Colorizer',
-      github:"https://github.com/kanav532/NothingIsBlackOrWhite-",
+      github:"https://github.com/kanavsinglaa/NothingIsBlackOrWhite-",
       desc:'An AI powered app that colorizes black & white images using GANs, Classification & Regression based CNNs',
       tech_stack: 'Pytorch, React '
 
     },
     {id: 2,
       title: 'Bikeshare Demand Predictor',
-      github:"https://github.com/kanav532/BikesharePrediction",
+      github:"https://github.com/kanavsinglaa/BikesharePrediction",
       desc:"An AI model that predicts the demand of rental bikes in the city for a given station so that the rental companies can better facilitate the distribution of bikes for customers thorughout the city",
       tech_stack: 'Python, Pandas, scikit-learn, Tensorflow'
      },
      {id: 3,
       title: 'AI that creates AI',
-      github:"https://github.com/kanav532/Experimentally-Assessing-the-Controllers-for-Neural-Architecture-Search-",
+      github:"https://github.com/kanavsinglaa/Experimentally-Assessing-the-Controllers-for-Neural-Architecture-Search-",
       desc:'Assessing how well Neural Networks learn when they train other neural networks for the task of classification. Critiquing the quality of AI that trains AI',
       tech_stack: 'Python, Pytorch, Numpy'
      },
      {id: 4,
       title: 'Stereo Vision',
-      github:"https://github.com/kanav532/StereoVision",
-      desc:'AConstructing 3D point clouds environment from a set of stereo 2D images.',
+      github:"https://github.com/kanavsinglaa/StereoVision",
+      desc:'AConstructing 3D point clouds environment from a set of stereo 2D images',
       tech_stack: 'Python, 3D reconstruction'
      },
      {id: 5,
      title: 'Othelo.Ai',
-     github:"https://github.com/kanav532/Othelo.Ai",
+     github:"https://github.com/kanavsinglaa/Othelo.Ai",
      desc:'An AI bot that plays Othelo based on smart heuristics and alpha beta pruning',
      tech_stack: 'Python, Heuristics, Alpha-Beta pruning '
      },

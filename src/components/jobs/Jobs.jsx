@@ -20,7 +20,7 @@ const experienceItems = [
         "Working in a team with seniorresearchers to build & ship a learning based planning stack for Huawei’s self driving system.",
         "Reproduced SOTA papers from scratch, orchestrated training runs on GPU clusters & extended these models to act as our baselines.",
         "Developed a modular and RL-friendly simulation environment (on top of CARLA) fortraining & modulartesting of different end to end or traditional autonomy stack based solutions, significantly improving team’s development productivity.",
-        "Effectively contributed to the research, implementation & patents for different learning-based solutions developed by the team"
+        "Effectively contributed to the research, implementation & patents for different learning-based solutions developed by the team."
       ]
     },
     {
@@ -38,7 +38,7 @@ const experienceItems = [
       company: "Autonomous Rover Team",
       desc: [
         "Lead the design, development & deployment of the CV pipelines fortwo rovers to compete in the internationalrobotics competition.",
-        "Deployed the pipeline with different detection and classification models, in production using TorchScript",
+        "Deployed the pipeline with different detection and classification models, in production using TorchScript.",
         "Managed the vision team of 15 senior engineering students in an Agile development cycle, forthe Intelligent Ground Vehicle Competition."
       ]
     },

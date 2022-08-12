@@ -23,12 +23,12 @@ const about = () => {
   );
 
   const tech_stack = [
-    "Machine Learning",
-    "Deep Learning",
-    "Reinforcement Learning",
     "Self-Driving",
+    "Machine Learning",
     "ML ops",
-    "Object Oriented Programming"
+    "Deep Learning",
+    "Object Oriented Programming",
+    "Reinforcement Learning"
   ];
 
   const tech_items = tech_stack.map(stack => <li>{stack}</li>);
