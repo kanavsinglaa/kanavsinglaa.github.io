@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.f8723b3b.css",
-    "main.js": "/static/js/main.4a6791e0.js",
+    "main.js": "/static/js/main.18ecd46a.js",
     "static/media/me_5.png": "/static/media/me_5.a249ec980dbc2beaf72b.png",
     "static/media/me_new_2.png": "/static/media/me_new_2.39a965a99b0e96fdd718.png",
     "static/media/kanav_ml.pdf": "/static/media/kanav_ml.1ffcea8c59129eeba5d9.pdf",
     "index.html": "/index.html",
     "main.f8723b3b.css.map": "/static/css/main.f8723b3b.css.map",
-    "main.4a6791e0.js.map": "/static/js/main.4a6791e0.js.map"
+    "main.18ecd46a.js.map": "/static/js/main.18ecd46a.js.map"
   },
   "entrypoints": [
     "static/css/main.f8723b3b.css",
-    "static/js/main.4a6791e0.js"
+    "static/js/main.18ecd46a.js"
   ]
 }
