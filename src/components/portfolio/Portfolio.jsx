@@ -9,8 +9,7 @@ const Portfolio = () => {
       title: 'Image Colorizer',
       github:"https://github.com/kanavsinglaa/NothingIsBlackOrWhite-",
       desc:'An AI powered app that colorizes black & white images using GANs, Classification & Regression based CNNs',
-      tech_stack: 'Pytorch, React '
-
+      tech_stack: 'Python, Pytorch, React.js'
     },
     {id: 2,
       title: 'Bikeshare Demand Predictor',
@@ -19,10 +18,10 @@ const Portfolio = () => {
       tech_stack: 'Python, Pandas, scikit-learn, Tensorflow'
      },
      {id: 3,
-      title: 'AI that creates AI',
+      title: 'How well can an AI train another AI',
       github:"https://github.com/kanavsinglaa/Experimentally-Assessing-the-Controllers-for-Neural-Architecture-Search-",
-      desc:'Assessing how well Neural Networks learn when they train other neural networks for the task of classification. Critiquing the quality of AI that trains AI',
-      tech_stack: 'Python, Pytorch, Numpy'
+      desc:'Assessing how well Neural Networks learn when they train other neural networks for the task of classification, hence critiquing the quality of AI system that trains another AI system',
+      tech_stack: 'Python, Pytorch, Numpy, NAS'
      },
      {id: 4,
       title: 'Stereo Vision',
@@ -36,12 +35,12 @@ const Portfolio = () => {
      desc:'An AI bot that plays Othelo based on smart heuristics and alpha beta pruning',
      tech_stack: 'Python, Heuristics, Alpha-Beta pruning '
      },
-    //  {id: 6,
-    //   title: 'Project #',
-    //   github:"https://github.com/",
-    //   desc:'',
-    //   tech_stack: ''
-    //  }
+     {id: 6,
+      title: 'sMart: Student Marketplace',
+      github:"https://github.com/victor-alvarez/sMartWebApp",
+      desc:'A web app and a student Mentorship Service Algorith assisting Univeristy of Toronto\'s students in personal career development',
+      tech_stack: 'React.JS, Django, SQL'
+     }
   ]
   return (
     <section id='portfolio'>
@@ -50,12 +49,12 @@ const Portfolio = () => {
       </div>
       <div className='container portfolio_container'>
       {
-        portfolio_data.map(({id,img,title,git,desc,tech_stack})=>{
+        portfolio_data.map(({id,title,github,desc,tech_stack})=>{
           return (
             <article key={id} className='portfolio_item'>
               <div className="portfolio_item-header">
                 <FaFolderOpen size={35}/>
-                <a href={git} target="_blank"><FaGithubSquare size={30}/></a>
+                <a href={github} target="_blank"><FaGithubSquare size={30}/></a>
               </div>
               <div className="card-title">{title}</div>
               <div className="card-desc">{desc}</div>
