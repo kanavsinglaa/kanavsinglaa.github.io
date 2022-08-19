@@ -87,11 +87,8 @@ canvas {
 
 /* ====== MEDIA QUERIES (SMALL DEVICES) ======== */
 @media screen and (max-width: 600px) {
-    /* kanav-model {
-        display: none;
-      } */
     header {
-        height: 100vh;
+        height: 80vh;
 
     }
 
