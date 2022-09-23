@@ -17,7 +17,7 @@ const experienceItems = [
       company: "Huawei's Noah's Ark Lab",
       duration: "JUN 2021 - PRESENT",
       desc: [
-        "Working in a team with seniorresearchers to build & ship a learning based planning stack for Huawei’s self driving system.",
+        "Worked in a team with seniorresearchers to build & ship a learning based planning stack for Huawei’s self driving system.",
         "Reproduced SOTA papers from scratch, orchestrated training runs on GPU clusters & extended these models to act as our baselines.",
         "Developed a modular and RL-friendly simulation environment (on top of CARLA) fortraining & modulartesting of different end to end or traditional autonomy stack based solutions, significantly improving team’s development productivity.",
         "Effectively contributed to the research, implementation & patents for different learning-based solutions developed by the team."
@@ -25,21 +25,30 @@ const experienceItems = [
     },
     {
       jobTitle: "Machine Learning Summer Research Fellow @",
-      company: "UofT DeepLearning lab",
+      company: "UofT Dynamic Optimization Lab",
       duration: "SUMMER 2020",
       desc: [
       "Achieved real-time inference at detecting contraband in X-ray baggage scans deployed in industry, at the Seoul–Incheon Intl. Airport.",
-      "Led analysis & testing of 25+ object detection & classification models in Pytorch to maximize the recall forthe problem in hand.",
-      "Effectively managed a team of student researchers to develop the detection pipeline trained on a customized private data-set & successfully scored funding alongside ESROP- U of T fellowship award forthe research conducted."
+      "Led analysis & testing of 25+ object detection & classification models in Pytorch to maximize the recall for the problem in hand.",
+      "Effectively managed a team of student researchers to develop the detection pipeline trained on a customized private data-set & successfully scored funding alongside ESROP- U of T fellowship award for the research conducted."
       ]
     },
+    {
+    jobTitle: "Junior Machine Learning Engineer @",
+    company: "Omdena",
+    duration: "SUMMER 2020",
+    desc: [
+      "Worked with a team of 50 contributors from across the globe to deploy an AI solution to prevent the spreading of Malaria in Africa, and other active sites in this world.",
+      "Helped the finalist team of IBM Watson AI XPRIZE challenge (AI for Good), Zzapp Malaria to integrate our developed AI solution to their already built platform to win the $5 Million cash prize and take this initiative to the next level."
+    ]
+    },   
     {
       jobTitle: "CV Lead @",
       company: "Autonomous Rover Team",
       desc: [
-        "Lead the design, development & deployment of the CV pipelines fortwo rovers to compete in the internationalrobotics competition.",
-        "Deployed the pipeline with different detection and classification models, in production using TorchScript.",
-        "Managed the vision team of 15 senior engineering students in an Agile development cycle, forthe Intelligent Ground Vehicle Competition."
+        "Lead the design, development & deployment of the CV pipelines for two rovers to compete in the international robotics competition.",
+        "Deployed the pipeline with different detection and classification models, in production using TorchScript & ONNX on a Raspberry Pi.",
+        "Managed the vision team of 15 senior engineering students in an Agile development cycle, for the Intelligent Ground Vehicle Competition."
       ]
     },
 ]
