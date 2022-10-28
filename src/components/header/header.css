@@ -31,7 +31,7 @@ header {
 .header__socials::after {
     content: '';
     width: 1px;
-    height: 2rem;
+    height: 4rem;
     background: var(--color-primary);
 }
 
