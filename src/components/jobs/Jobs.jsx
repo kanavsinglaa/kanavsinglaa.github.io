@@ -14,8 +14,8 @@ import 'swiper/css/scrollbar';
 const experienceItems = [
     {
       jobTitle: "AI Engineer @",
-      company: "Huawei's Noah's Ark Lab",
-      duration: "JUN 2021 - PRESENT",
+      company: "Huawei Technologies, Noah's Ark Self Driving Division",
+      duration: "JUN 2021 - AUG2022",
       desc: [
         "Worked in a team with seniorresearchers to build & ship a learning based planning stack for Huawei’s self driving system.",
         "Reproduced SOTA papers from scratch, orchestrated training runs on GPU clusters & extended these models to act as our baselines.",
@@ -35,11 +35,13 @@ const experienceItems = [
     },
     {
     jobTitle: "Junior Machine Learning Engineer @",
-    company: "Omdena",
+    company: "Zzapp Malaria",
     duration: "SUMMER 2020",
     desc: [
       "Worked with a team of 50 contributors from across the globe to deploy an AI solution to prevent the spreading of Malaria in Africa, and other active sites in this world.",
-      "Helped the finalist team of IBM Watson AI XPRIZE challenge (AI for Good), Zzapp Malaria to integrate our developed AI solution to their already built platform to win the $5 Million cash prize and take this initiative to the next level."
+      "Worked on building a vision pipeline that integrates with the map-based mobile app, to identify malaria hotspots (water bodies) & convey AI strategies to field workers ensuring thorough implementation.",
+      "Analyzed different models that utilized topography & satellite imagery to identify the transmission hotspots.",
+      "Team won the IBM Watson’s AI XPRIZE ($5 million) & the app is deployed across sub-Saharan Africa."
     ]
     },   
     {

@@ -12,13 +12,13 @@ const about = () => {
         University of Toronto
       </a>
       . In the past, I have worked in and around different AI based applications thorugh key development roles 
-      as an <b>AI Engineer</b> in industry, a <b>machine learning research fellow</b> in academia & <b>CV lead</b> + developer roles at various design teams. 
+      as an <b>AI Engineer</b> & <b>Junior Machine Learning Engineer</b> in industry, a <b>Machine Learning Research Fellow</b> in academia & <b>Vision team lead</b> + developer roles at various design teams. 
       I am also a published author at the <a href="https://arxiv.org/abs/2111.14059"> {""}Climate Change AI workshop, NeurIPS 2021</a> for my work around how the state of Computer Vision is contributing to climate change.
     </p>
   );
   const extra_para = (
     <p>
-      Outside of work, I'm interested in using AI creatively to produce art and music.
+      Outside of work, I'm interested in using AI creatively to produce art and music. Samples coming up soon.
     </p>
   );
 
@@ -46,7 +46,7 @@ const about = () => {
       <div className='about-description'>
         {about_para}
         <br/>
-        {"Here are some technologies and ideas I have been working around:"}
+        {"Here are some technologies and ideas I have worked around:"}
         <ul className="tech-stack">
           {tech_items}
         </ul>
