@@ -84,3 +84,42 @@
   opacity: 1;
   visibility: visible;
 }
+
+.timeline:hover .job {
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Restore opacity for the hovered job */
+.timeline .job:hover {
+  opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+  /* Hide the timeline line */
+  .timeline::before {
+      display: none;
+  }
+
+/* Styling for an expanded job description */
+.job_description.expanded {
+    display: block;
+    max-height: 500px; /* Assuming a max height, can be adjusted */
+    opacity: 1;
+}
+
+  /* Position all jobs in a vertical stack */
+  .job.left, .job.right {
+      text-align: center;
+      padding-left: 0;
+      padding-right: 0;
+  }
+  
+  /* Reposition the circles to the left of the job content */
+  .job.left .circle, .job.right .circle {
+      left: 10px;
+      right: auto;
+      top: 50%;
+      transform: translateY(-50%);
+  }
+}

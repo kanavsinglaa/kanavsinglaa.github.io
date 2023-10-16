@@ -7,7 +7,7 @@ let deltaK = 0.0065;  // Increased speed for the animation
 
 const Sketch = p5 => {
   p5.setup = () => {
-    p5.createCanvas(575, 575); 
+    p5.createCanvas(440, 440); 
     p5.noFill();
   };
 
@@ -17,8 +17,8 @@ const Sketch = p5 => {
 
     p5.beginShape();
     for (let angle = 0; angle < 2 * p5.PI; angle += 0.01) {
-      let r = 150 * p5.cos(k * angle) * p5.cos(j * angle);  // Increased radius multiplier
-      let x = 1.8 * r * p5.cos(angle);  // Adjusted the x-axis scaling
+      let r = 130 * p5.cos(k * angle) * p5.cos(j * angle);  // Increased radius multiplier
+      let x = 1.5 * r * p5.cos(angle);  // Adjusted the x-axis scaling
       let y = r * p5.sin(angle);
       p5.stroke(255, 150);
       p5.strokeWeight(2);

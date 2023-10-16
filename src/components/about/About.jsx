@@ -8,8 +8,12 @@ const About = () => {
     const about_para = (
         <p>
             At the forefront of AI innovation, I spearhead transformative initiatives at 
-            <emp>Valsoft</emp> as their <emp>AI Founding Engineer</emp>. As an 
-            <emp>Engineering Science</emp> alumnus from 
+            <a href="https://www.valsoftcorp.com/">
+                {" "}
+                <b>Valsoft</b>
+                {" "} 
+            </a> as their <emp>AI Founding Engineer</emp>. As an 
+            <emp> Engineering Science</emp> alumnus from 
             <a href="https://www.utoronto.ca/about-u-of-t">
                 {" "}
                 <b>University of Toronto</b>
