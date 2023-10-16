@@ -1,0 +1,9 @@
+.eulers-equation {
+  font-family: "NTR", sans-serif;
+  font-size: 1.8rem;  
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: -60px;  
+  letter-spacing: 2px;
+  transition: opacity 1s ease-in-out;  
+}

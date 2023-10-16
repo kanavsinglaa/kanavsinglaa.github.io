@@ -1,63 +1,70 @@
-import React from 'react'
-import './about.css'
-import ME from '../../assets/me_5.png'
-import {MdEmail} from 'react-icons/md' 
+import React from 'react';
+import './about.css';
+import ME from '../../assets/me_5.png';
+import FadeInSection from '../FadeInSection/FadeInSection';
+import NeuralNetwork from './NeuralNetwork';
 
-const about = () => {
-  const about_para = (
-    <p>
-      I am currently a fourth year <b>Engineering Science</b> student majoring in <b>Robotics</b> & minoring in <b>Machine Intelligence</b> at
-      <a href="https://www.utoronto.ca/about-u-of-t">
-        {" "}
-        University of Toronto
-      </a>
-      . In the past, I have worked in and around different AI based applications thorugh key development roles 
-      as an <b>AI Engineer</b> & <b>Junior Machine Learning Engineer</b> in industry, a <b>Machine Learning Research Fellow</b> in academia & <b>Vision team lead</b> + developer roles at various design teams. 
-      I am also a published author at the <a href="https://arxiv.org/abs/2111.14059"> {""}Climate Change AI workshop, NeurIPS 2021</a> for my work around how the state of Computer Vision is contributing to climate change.
-    </p>
-  );
-  const extra_para = (
-    <p>
-      Outside of work, I'm interested in using AI creatively to produce art and music. Samples coming up soon.
-    </p>
-  );
+const About = () => {
+    const about_para = (
+        <p>
+            At the forefront of AI innovation, I spearhead transformative initiatives at 
+            <emp>Valsoft</emp> as their <emp>AI Founding Engineer</emp>. As an 
+            <emp>Engineering Science</emp> alumnus from 
+            <a href="https://www.utoronto.ca/about-u-of-t">
+                {" "}
+                <b>University of Toronto</b>
+                {" "}
+            </a>, I specialized in <emp>Robotics</emp> & <emp>AI</emp>. My journey from academia to industry has been marked by leadership in AI engineering roles, producing impactful AI solutions, and publishing authoritative content in the domain.
+        </p>
+    );
+    const tech_stack = [
+        "Deep Learning & NLP",
+        "AI Strategy & Implementation",
+        "LLMs & RAGs for AI Products",
+        "Ideation to Deployment",
+        "End-to-End Autonomous Vehicles",
+        "Design of Autonomous Rovers & Drones"
+    ];
 
-  const tech_stack = [
-    "Self-Driving",
-    "Machine Learning",
-    "ML ops",
-    "Deep Learning",
-    "Object Oriented Programming",
-    "Reinforcement Learning"
-  ];
+    const extra_para = (
+        <p>
+            Beyond the professional realm, I delve into the confluence of AI and creativity, pioneering in AI-driven art and music production — always eager to explore uncharted territories and envision new AI applications.
+        </p>
+    );
+    const tech_items = tech_stack.map((stack, i) => (
+      <FadeInSection key={i} delay={`${i * 100}ms`}>
+          <li>{stack}</li>
+      </FadeInSection>
+  ));
 
-  const tech_items = tech_stack.map(stack => <li>{stack}</li>);
   return (
-    <section id='about'>
-    <div className="section-header ">
-      <span className="section-title">/ about me</span>
-    </div>
-    <div className='container about_container'>
-      <div className='about_me'>
-        <div className='about_me-img'>
-          <img src={ME} alt='about me'/>
-        </div>
-      </div>
-      <div className='about-description'>
-        {about_para}
-        <br/>
-        {"Here are some technologies and ideas I have worked around:"}
-        <ul className="tech-stack">
-          {tech_items}
-        </ul>
-        {extra_para}
-        <br/>
-        <a href="mailto:kanav.singla@mail.utoronto.ca" className='btn btn-primary'>Let's talk</a>
-      </div>
-    
-    </div>
-    </section>
-  )
+      <section id='about'>
+          <FadeInSection>
+              <div className="section-header ">
+                  <span className="section-title">/ about me</span>
+              </div>
+              <div className='container about_container'>
+                  <div className='about_me'>
+                      <div className='about_me-img'>
+                          <img src={ME} alt='about me'/>
+                      </div>
+                  </div>
+                  <div className='about-description'>
+                      {about_para}
+                      <br/>
+                      {"Areas of expertise and the recent hands-on experience that I bring to the forefront:"}
+                      <ul className="tech-stack">
+                          {tech_items}
+                      </ul>
+                      {extra_para}
+                      <br/>
+                      <a href="mailto:kanav.singla@mail.utoronto.ca" className='btn btn-primary'>Get in Touch</a>
+                  </div>
+                  <NeuralNetwork />
+              </div>
+          </FadeInSection>
+      </section>
+  );
 }
 
-export default about  
+export default About;

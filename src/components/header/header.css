@@ -3,13 +3,22 @@ header {
     padding-top: 7rem;
     overflow: hidden;
 }
-
+/* Add this CSS code for the fade-in effect */
 .header__container {
     text-align: center;
     height: 100%;
-    position: relative; 
-}
-
+    position: relative;
+    opacity: 0; /* Initially set opacity to 0 */
+    transform: translateY(20px); /* Initially move it down a bit */
+    transition: opacity 1s ease, transform 1s ease; /* Add transitions for opacity and transform */
+    padding-left: 10%;
+    z-index: 1
+  }
+  
+  .header__container.fade-in {
+    opacity: 1; /* When the element has the "fade-in" class, make it fully visible */
+    transform: translateY(0); /* Reset the transform */
+  }
 /* ================ CTA ================== */
 .cta {
     margin-top: 2.5rem;
@@ -42,7 +51,7 @@ header {
     height: 30rem;
     position: absolute;
     left: calc(50% - 11rem);
-    margin-top: 4rem;
+    margin-top: 2rem;
     border-radius: 12rem 12rem 0 0;
     overflow: hidden;
 }
@@ -72,8 +81,16 @@ header {
     font-size: 2.5rem;
   }
 
-
-
+.intro-description {
+font-family: "NTR", sans-serif; /* Use the desired font */
+font-size: 1.2rem; /* Adjust the font size as needed */
+color: rgba(255, 255, 255, 0.7);
+text-align: center;
+margin-top: 5px; /* Reduce the margin to move it closer to the animation */
+letter-spacing: 1px; /* Adjust letter-spacing as needed */
+line-height: 1.4; /* Adjust line-height as needed */
+}
+  
 canvas {
     width: 200px !important;
   }

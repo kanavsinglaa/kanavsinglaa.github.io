@@ -1,35 +1,46 @@
-import React from 'react'
-import './header.css'
-import CTA from './CTA'
-// import ME from '../../assets/me_6.png'
-import ME from '../../assets/me_new_2.png'
-import HeaderSocials from './HeaderSocials'
-import Typist from 'react-typist'
-import "react-typist/dist/Typist.css"
-// import FadeIn from '../fadein'
+import React, { useEffect, useState } from 'react'; // Import useEffect and useState
+import './header.css';
+import CTA from './CTA';
+import HeaderSocials from './HeaderSocials';
+import Typist from 'react-typist';
+import "react-typist/dist/Typist.css";
+import EnhancedEulersIdentity from './EulersIdentity'; 
 
-const header = () => {
+const Header = () => {
+  const [isVisible, setIsVisible] = useState(false);  // State to control the fade-in effect
+
+  // Use useEffect to trigger the fade-in effect when the component mounts
+  useEffect(() => {
+    // Add a delay before fading in (adjust the delay duration if needed)
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
+
+    // Cleanup the timeout to prevent memory leaks
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <header>
-      <div className='container header__container'>
-      <Typist avgTypingDelay={250}>
+      <div className={`container header__container${isVisible ? ' fade-in' : ''}`}>
+        <Typist avgTypingDelay={250}>
           <span className="intro-title">
             {"hi, "}
             <span className="intro-name">{"kanav"}</span>
             {" here."}
           </span>
         </Typist>
-        <h2 className="text-light">I'm an aspiring Machine Learning Engineer</h2>
+        <h2 className="text-light">Bridging AI and Creativity | Building Innovative Products</h2>
+        <p className="intro-description">
+        I'm an AI engineer and innovator based in Toronto. Deeply engaged in bridging research with real-world development, I'm passionate about designing AI products and pushing the boundaries of what's achievable.
+        </p>
         <CTA />
         <HeaderSocials/>
-        <div className='me'>
-          <img src={ME} alt="me" />
-        </div>        
-        <a href='#footer' className='scroll__down'>Scroll Down</a>
-
+        <EnhancedEulersIdentity />
+        <a href='#footer' className='scroll__down'> scroll down </a>
       </div>
     </header>
-  )
+  );
 }
 
-export default header
+export default Header;

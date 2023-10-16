@@ -1,81 +1,86 @@
-.container.jobs_container {
-    width: 75%;
-
+.timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-ul {
-    list-style: none;
-  }
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: #c5c5c5;
+}
 
 .job {
-    background: var(--color-bg-variant);
-    text-align: center;
-    padding: 2rem;
-    border-radius: 1rem;
-    user-select: none;
-}
-.job_title {
-    font-size: 18px;
+  position: relative;
+  margin: 20px 0;
+  padding: 10px;
 }
 
-
-.job_duration {
-    font-size: 16px;
-    color: var(--color-light);
+.job.left {
+  padding-right: 40px;
 }
 
-.job_company {
-    color: var(--color-primary);
-    font-weight: bold;
-    font-size: 20px;
+.job.right {
+  padding-left: 40px;
 }
-.job_description li::before {
-    content: "▹  ";
-    color: var(--color-primary);
-    position: absolute;
-    left: 0;
-  }
 
-.job_description li {
-    position: relative;
-    padding-left: 30px;
-    padding-bottom: 16px;
-    font-size: 16px;
-    color: var(--color-light);
-    text-align: left;
-  }
-  
+.job .job_title,
+.job .job_company,
+.job .job_duration {
+  display: block;
+}
 
 .job_description {
-    color: var(--color-light);
-    font-weight: 500;
-    display: block;
-    width: 90%;
-    margin: 0.8rem auto 0;
-
+  display: none; /* Initially hide all job descriptions */
+  transition: all 0.3s ease-in-out;
 }
 
-/* .swiper-pagination {
-    background: var(--color-primary);
+.circle {
+  position: absolute;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  background: #c5c5c5;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+}
+.job.left {
+  padding-right: 40px;
+  text-align: right;
 }
 
-.swiper-button-prev {
-    background: var(--color-primary);
-} */
-
-/* ====== MEDIA QUERIES (MEDIUM DEVICES) ======== */
-@media screen and (max-width: 1024px) {
-    .container.jobs_container {
-        width: 70%
-    }
+.job.right {
+  padding-left: 40px;
+  text-align: left;
 }
 
-/* ====== MEDIA QUERIES (SMALL DEVICES) ======== */
-@media screen and (max-width: 600px) {
-    .container.jobs_container {
-        width: var(--container-width-sm);
-    }
-    .job_description {
-        width: var(--container-width-sm);
-    }
+.job.left .circle {
+  right: -30px;
+}
+
+.job.right .circle {
+  left: -30px;
+}
+
+.circle:hover + .job_description {
+  display: block; /* Display the job description when hovering over the circle */
+}
+
+.timeline.job-hovered::before {
+  background: transparent;
+}
+
+.job_description {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.circle:hover + .job_description {
+  opacity: 1;
+  visibility: visible;
 }

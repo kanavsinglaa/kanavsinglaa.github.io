@@ -12,17 +12,12 @@ const Footer = () => {
       <div>Built and designed by Kanav Singla.</div>
       <div>All rights reserved. &copy;</div>
     </div>
-    <div className='permalinks'>
-      <li><a href='#'>/home</a></li>
-      <li><a href='#about'>/about</a></li>
-      <li><a href='#jobs'>/experience</a></li>
-      <li><a href='#portfolio'>/portfolio</a></li>
-    </div>
 
     <div className='footer_socials'>
+      <a href="https://twitter.com/kanavsinglaa"><FaTwitter /></a>
+      <a href="https://www.instagram.com/kanavsinglaa/"><FaInstagram /></a>
       <a href="http://m.me/kanav.singla.532" target="_blank"><FaFacebookF /> </a>
-      <a href=""><FaTwitter /></a>
-      <a href=""><FaInstagram /></a>
+
     </div>
 
   </footer>

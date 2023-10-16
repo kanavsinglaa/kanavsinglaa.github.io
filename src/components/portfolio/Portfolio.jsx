@@ -2,6 +2,7 @@ import React from 'react'
 import './portfolio.css'
 import {FaFolder, FaGithubSquare} from 'react-icons/fa'
 import {FaFolderOpen} from 'react-icons/fa'
+import FadeInSection from '../FadeInSection/FadeInSection';
 
 const Portfolio = () => {
   const portfolio_data= [
@@ -44,6 +45,7 @@ const Portfolio = () => {
   ]
   return (
     <section id='portfolio'>
+    <FadeInSection>
       <div className="section-header ">
         <span className="section-title">/ software-creations</span>
       </div>
@@ -64,6 +66,7 @@ const Portfolio = () => {
         })
       }
       </div>
+      </FadeInSection>
     </section>
   )
 }
