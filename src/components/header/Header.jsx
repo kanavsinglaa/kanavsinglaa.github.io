@@ -5,6 +5,7 @@ import HeaderSocials from './HeaderSocials';
 import Typist from 'react-typist';
 import "react-typist/dist/Typist.css";
 import EnhancedEulersIdentity from './EulersIdentity'; 
+import PiIrrationality from './PiIrrationality'; 
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(false);  // State to control the fade-in effect
@@ -36,7 +37,7 @@ const Header = () => {
         </p>
         <CTA />
         <HeaderSocials/>
-        <EnhancedEulersIdentity />
+        <PiIrrationality/>
         <a href='#footer' className='scroll__down'> scroll down </a>
       </div>
     </header>

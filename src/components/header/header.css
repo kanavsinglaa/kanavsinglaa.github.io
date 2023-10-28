@@ -1,17 +1,17 @@
 header {
     height: 100vh;
     padding-top: 7rem;
-    overflow: hidden;
+    overflow: visible;
 }
 /* Add this CSS code for the fade-in effect */
 .header__container {
     text-align: center;
-    height: 100%;
+    height: 115%;
     position: relative;
     opacity: 0; /* Initially set opacity to 0 */
     transform: translateY(20px); /* Initially move it down a bit */
     transition: opacity 1s ease, transform 1s ease; /* Add transitions for opacity and transform */
-    padding-left: 10%;
+    padding-left: 0;
     z-index: 1
   }
   
@@ -92,8 +92,12 @@ line-height: 1.4; /* Adjust line-height as needed */
 }
   
 canvas {
-    width: 200px !important;
-  }
+    width: 440px !important;
+    height: 440px !important;
+    display: block;
+    margin: 0 auto;  /* Center the canvas */
+}
+
 /* ====== MEDIA QUERIES (MEDIUM DEVICES) ======== */
 @media screen and (max-width: 1024px) {
     header {
