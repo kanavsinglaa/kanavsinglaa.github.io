@@ -1,5 +1,5 @@
 header {
-    height: 100vh;
+    height: 110vh;
     padding-top: 7rem;
     overflow: visible;
 }
@@ -101,14 +101,14 @@ canvas {
 /* ====== MEDIA QUERIES (MEDIUM DEVICES) ======== */
 @media screen and (max-width: 1024px) {
     header {
-        height: 68vh;
+        height: 75vh;
     }
 }
 
 /* ====== MEDIA QUERIES (SMALL DEVICES) ======== */
 @media screen and (max-width: 600px) {
     header {
-        height: 100vh;
+        height: 110vh;
 
     }
 
@@ -116,4 +116,9 @@ canvas {
     .scroll__down {
         display: none;
     }
+    
+    .intro-description {
+        display: none;
+    }
+
 }

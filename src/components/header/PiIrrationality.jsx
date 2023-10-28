@@ -47,7 +47,7 @@ const PiIrrationality = () => {
             <FadeInSection>
             <p className="eulers-equation">e<sup>iπ</sup> + 1 = 0</p>
             <p className="eulers-description">
-                Bridging the realms of the real and imaginary, just as AI bridges the tangible and the abstract. A dance between logic and creativity, Euler's identity encapsulates my journey of melding the algorithmic precision of AI with the boundless canvas of human imagination and its real-world applications.
+                Bridging real and imaginary, I position AI at the intersection of the tangible and abstract. Inspired by Euler's seamless union of diverse realms, I navigate the nuances of AI, blending theory with application. The animation's unending dance mirrors my trajectory: ever-evolving, refining, and pushing AI's limits. In a domain fixated on convergence, my passion lies in the relentless chase, mirroring the perpetual allure of irrationality.
             </p>
             </FadeInSection>
         </div>
