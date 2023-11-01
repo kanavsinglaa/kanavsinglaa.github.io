@@ -1,41 +1,70 @@
 .eulers-equation {
   font-family: "NTR", sans-serif;
-  font-size: 1.8rem;  
+  font-size: 1.8rem;
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
-  margin-top: -40px;  
+  margin-top: 0; /* Changed from -40px to 0 to prevent overlap */
   letter-spacing: 2px;
-  transition: opacity 1s ease-in-out;  
+  transition: opacity 1s ease-in-out;
 }
 .eulers-description {
   font-family: "NTR", sans-serif;
-  font-size: 1rem; /* Adjust the font size as needed */
+  font-size: 1rem;
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
-  margin-top: 8px; /* Adjust the margin as needed */
+  margin-top: 8px;
   letter-spacing: 1px;
-  line-height: 1.6; /* Adjust the line-height for structured display */
-  max-width: 750px; /* Set a maximum width for the paragraph */
-  margin-left: auto; /* Center the paragraph horizontally */
-  margin-right: auto; /* Center the paragraph horizontally */
+  line-height: 1.6;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Hide description for screens less than 600px wide */
 @media screen and (max-width: 600px) {
   .eulers-equation {
     display: none;
-}
+  }
   .eulers-description {
-      display: none;
+    display: none;
   }
 }
-
 
 @media screen and (max-width: 1024px) {
   .eulers-equation {
     display: none;
-}
+  }
   .eulers-description {
     display: none;
+  }
 }
+
+@media screen and (max-height: 800px) {
+  .eulers-description {
+    display: none;
+  }
+}
+/* Base style for canvas - applies when the screen width is greater than 768px */
+canvas {
+  width: 440px; /* Fixed width for larger screens */
+  height: 440px; /* Fixed height for larger screens */
+  display: block;
+  margin: 0 auto; /* Center the canvas */
+}
+
+/* Scale down the canvas for medium screens (e.g., tablets) */
+@media screen and (max-width: 768px) {
+  canvas {
+    width: 50vw; /* 50% of the viewport width */
+    height: 50vw; /* Keep the aspect ratio the same */
+    max-width: 400px; /* Optional: Maximum width for medium screens */
+    max-height: 400px; /* Optional: Maximum height for medium screens */
+  }
+}
+
+/* Hide the canvas for small screens (e.g., phones) */
+@media screen and (max-width: 480px) {
+  canvas {
+    display: none;
+  }
 }

@@ -20,11 +20,9 @@
     overflow: hidden;
     transition: var(--transition);
 }
-
-
-
 #about {
     position: relative;
+    clear:both;
 }
 #neural-network-svg {
     position: absolute;
