@@ -37,6 +37,9 @@
   .eulers-description {
     display: none;
   }
+  canvas {
+    display: none;
+  }
 }
 
 @media screen and (max-height: 800px) {
@@ -44,27 +47,5 @@
     display: none;
   }
 }
-/* Base style for canvas - applies when the screen width is greater than 768px */
-canvas {
-  width: 440px; /* Fixed width for larger screens */
-  height: 440px; /* Fixed height for larger screens */
-  display: block;
-  margin: 0 auto; /* Center the canvas */
-}
 
-/* Scale down the canvas for medium screens (e.g., tablets) */
-@media screen and (max-width: 768px) {
-  canvas {
-    width: 50vw; /* 50% of the viewport width */
-    height: 50vw; /* Keep the aspect ratio the same */
-    max-width: 400px; /* Optional: Maximum width for medium screens */
-    max-height: 400px; /* Optional: Maximum height for medium screens */
-  }
-}
 
-/* Hide the canvas for small screens (e.g., phones) */
-@media screen and (max-width: 480px) {
-  canvas {
-    display: none;
-  }
-}
