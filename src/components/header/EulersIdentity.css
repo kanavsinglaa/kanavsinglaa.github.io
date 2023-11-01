@@ -3,16 +3,16 @@
   font-size: 1.8rem;
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
-  margin-top: 0; /* Changed from -40px to 0 to prevent overlap */
+  margin-top: -30px; 
   letter-spacing: 2px;
   transition: opacity 1s ease-in-out;
 }
 .eulers-description {
   font-family: "NTR", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
-  margin-top: 8px;
+  margin-top: 7px;
   letter-spacing: 1px;
   line-height: 1.6;
   max-width: 750px;
