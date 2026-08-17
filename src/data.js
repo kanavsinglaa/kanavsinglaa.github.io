@@ -58,13 +58,13 @@ export const experience = [
     where: 'toronto',
     domain: 'voice',
     points: [
-      'dropped first-sentence latency from 218 ms to 22 ms by warming models at session start; benchmarked GPU endpoints to low-200 ms p50 time-to-first-token.',
+      'cut first-sentence latency 218 ms to 22 ms; benchmarked GPU endpoints to low-200 ms p50 time-to-first-token.',
       'fine-tune models for specific verticals so restaurants, hotels, and car rental each book in their own language.',
       'shipped an int8 ONNX classifier (40% to 87% accuracy) that cut per-turn LLM tokens 20% input and 33% output on live production calls.',
       'cut LLM spend ~55% with a targeted inference migration, validated independently by finance to within 4%.',
       'own the data path end to end: mine production calls, build labeling pipelines, and freeze gold eval sets before every training run.',
-      'stabilized turn-to-turn delivery, cutting acoustic discontinuity 72% on production call replays.',
-      'killed two costly bets early with data, not opinion, using traps the baseline fails by design.',
+      'stabilized turn-to-turn delivery, cutting acoustic discontinuity 72% on call replays.',
+      'killed two costly bets with data, not opinion, using traps the baseline fails by design.',
     ],
   },
   {
@@ -72,14 +72,14 @@ export const experience = [
     role: 'technical co-founder & ai lead',
     org: 'Ampliphi',
     url: 'https://www.getampliphi.com/about-us',
-    sub: 'a Valsoft company',
+    sub: 'dynamic pricing & AI demand aggregator for hospitality · a Valsoft company',
     when: 'jan 2025 → apr 2026',
     where: 'toronto',
     domain: 'product',
     points: [
       'owned the complete MVP: backend, ML and LLM architecture, and the end-to-end AI team.',
-      'built the platform from 0 to half a million ARR in under a year, across the US, Canada, and Australia.',
-      'shipped demand forecasting, compression-event consolidation, and dynamic pricing to 100+ hotels.',
+      'built the platform from 0 to half a million ARR in under a year, focused on boutique hotels and hotel chains across the US, Canada, and Australia.',
+      'shipped demand forecasting, compression-event consolidation, and dynamic pricing to 150+ hotels.',
       'layered LLM pricing insights and LLM-extracted event signals into demand forecasts.',
       'hired and led the AI team, owning the evaluation bar every model cleared before it touched customer pricing.',
     ],
@@ -111,9 +111,9 @@ export const experience = [
     domain: 'autonomy',
     points: [
       'shipped a learning-based planning stack for Huawei’s self-driving system.',
-      'reproduced state-of-the-art planning papers from scratch as internal team baselines.',
-      'orchestrated distributed training across GPU clusters and large multimodal datasets.',
-      'built a modular closed-loop CARLA simulator for training and offline evaluation.',
+      'trained large planning models end to end: multimodal data pipelines, distributed GPU runs, and closed-loop evaluation.',
+      'benchmarked imitation learning against reinforcement learning for planning; reproduced state-of-the-art papers as team baselines.',
+      'built a modular closed-loop CARLA simulator used for RL training and offline evaluation.',
     ],
   },
 ]
@@ -123,7 +123,7 @@ export const results = [
   { value: '1,500+', label: 'restaurants and hotels answering with voice AI', domain: 'voice' },
   { value: '$0 → $500k', label: 'ARR in year one as technical co-founder', domain: 'product' },
   { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'voice' },
-  { value: '100+', label: 'hotels running live ML pricing', domain: 'product' },
+  { value: '150+', label: 'hotels running live ML pricing', domain: 'product' },
   { value: '94%', label: 'recall, real-time detection shipped to incheon airport', domain: 'models' },
 ]
 
@@ -178,28 +178,33 @@ export const projects = [
 export const education = {
   school: 'University of Toronto',
   degree: 'BASc, Engineering Science (honors)',
-  detail: 'robotics major · minors in AI and business · 2023',
+  detail: 'specialization in robotics and AI · minor in business · 2018 → 2023',
 }
 
 export const skills = [
   {
-    group: 'models',
+    group: 'machine learning',
     domain: 'models',
-    items: ['PyTorch', 'HuggingFace', 'ONNX Runtime', 'LoRA / PEFT', 'post-training', 'quantization', 'TTS / STT', 'LLMs & RAG', 'computer vision'],
+    items: ['PyTorch', 'HuggingFace', 'LLMs & RAG', 'fine-tuning (LoRA / PEFT)', 'quantization', 'computer vision'],
   },
   {
-    group: 'inference',
+    group: 'real-time & voice ai',
     domain: 'voice',
-    items: ['real-time streaming', 'latency profiling', 'TTFT tuning', 'managed endpoints', 'distributed GPU training', 'LiveKit pipelines', 'TorchScript'],
+    items: ['real-time streaming inference', 'TTS / STT voice models', 'WebRTC / LiveKit pipelines', 'latency & throughput optimization', 'ONNX Runtime'],
   },
   {
-    group: 'data & evals',
+    group: 'data & evaluation',
     domain: 'product',
-    items: ['dataset curation from production traffic', 'labeling pipelines', 'gold eval sets', 'adversarial test design', 'production A/B testing', 'cost & capacity modeling'],
+    items: ['dataset curation & labeling pipelines', 'eval harness & benchmark design', 'A/B testing', 'cost & capacity modeling'],
   },
   {
-    group: 'practice',
+    group: 'ai-native development',
     domain: 'autonomy',
-    items: ['Python', 'SQL', 'mypy / ruff', 'Docker'],
+    items: ['Claude Code', 'Cursor', 'Codex', 'MCP server design', 'context engineering', 'eval-gated agent workflows'],
+  },
+  {
+    group: 'engineering',
+    domain: 'models',
+    items: ['Python', 'SQL', 'Docker', 'CI/CD', 'AWS / GCP'],
   },
 ]

@@ -104,7 +104,7 @@ export default function App() {
               {intro.map((seg, i) => <IntroSeg key={i} seg={seg} />)}
             </p>
             <p className="hero-meta">
-              {contact.location.toLowerCase()} · open to startup roles
+              {contact.location.toLowerCase()}
             </p>
             <p className="hero-links">
               <a href={`mailto:${contact.email}`}>{contact.email}</a>
