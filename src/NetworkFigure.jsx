@@ -13,44 +13,45 @@ function rand(seed) {
 
 function buildGraph() {
   const layers = [
-    // x, nodes
+    // x, nodes: [label, domain, section the node links to]
     [-1.7, [
-      ['audio stream', 'voice'],
-      ['market data', 'product'],
-      ['camera feed', 'autonomy'],
-      ['raw documents', 'models'],
+      ['audio stream', 'voice', '#xp-sadie'],
+      ['market data', 'product', '#xp-ampliphi'],
+      ['camera feed', 'autonomy', '#xp-huawei'],
+      ['raw documents', 'models', '#xp-valsoft'],
     ]],
     [-0.57, [
-      ['pytorch', 'models'],
-      ['onnx int8', 'voice'],
-      ['lora fine-tunes', 'models'],
-      ['rag retrieval', 'models'],
-      ['demand forecasting', 'product'],
-      ['learned planning', 'autonomy'],
+      ['pytorch', 'models', '#skills'],
+      ['onnx int8', 'voice', '#xp-sadie'],
+      ['lora fine-tunes', 'models', '#xp-sadie'],
+      ['rag retrieval', 'models', '#xp-valsoft'],
+      ['demand forecasting', 'product', '#xp-ampliphi'],
+      ['learned planning', 'autonomy', '#xp-huawei'],
     ]],
     [0.57, [
-      ['latency profiling', 'voice'],
-      ['eval harnesses', 'models'],
-      ['production a/b', 'product'],
-      ['quantization', 'voice'],
-      ['distributed training', 'autonomy'],
+      ['latency profiling', 'voice', '#contributions'],
+      ['eval harnesses', 'models', '#skills'],
+      ['production a/b', 'product', '#skills'],
+      ['quantization', 'voice', '#skills'],
+      ['distributed training', 'autonomy', '#xp-huawei'],
     ]],
     [1.7, [
-      ['22 ms reply', 'voice'],
-      ['1,500+ venues live', 'voice'],
-      ['$500k arr', 'product'],
-      ['94% recall @ incheon', 'models'],
+      ['22 ms reply', 'voice', '#xp-sadie'],
+      ['1,500+ venues live', 'voice', '#xp-sadie'],
+      ['$500k arr', 'product', '#xp-ampliphi'],
+      ['94% recall @ incheon', 'models', '#research'],
     ]],
   ]
 
   const nodes = []
   layers.forEach(([x, defs], li) => {
     const n = defs.length
-    defs.forEach(([label, domain], i) => {
+    defs.forEach(([label, domain, href], i) => {
       const fy = n === 1 ? 0.5 : i / (n - 1)
       nodes.push({
         label,
         domain,
+        href,
         layer: li,
         x: x + (rand(li * 10 + i) - 0.5) * 0.2,
         y: (fy - 0.5) * 1.9 + (rand(li * 31 + i * 7) - 0.5) * 0.24,
@@ -252,7 +253,10 @@ export default function NetworkFigure() {
           }
         })
 
-      // hover chip
+      // chips: hover beats everything; during the pass the wavefront lights
+      // nodes up as it reaches them; afterwards the outputs stay labeled
+      const chipped = new Set()
+
       s.hover = null
       if (s.pointer) {
         let best = null
@@ -263,11 +267,21 @@ export default function NetworkFigure() {
         })
         if (best) {
           s.hover = best.n
+          chipped.add(best.n)
           chip(best.p.x, best.p.y, best.n.label, best.n.domain)
         }
       }
 
-      // after a completed pass, label the outputs (staggered so chips never overlap)
+      if (s.passStart >= 0 && !s.passDone) {
+        projected.forEach(({ n, p }) => {
+          const since = front - n.x
+          if (since > 0 && since < 0.62 && !chipped.has(n)) {
+            chipped.add(n)
+            chip(p.x, p.y, n.label, n.domain)
+          }
+        })
+      }
+
       if (s.passDone && !s.hover) {
         let lastY = -Infinity
         projected
@@ -276,9 +290,25 @@ export default function NetworkFigure() {
           .forEach(({ n, p }) => {
             const y = Math.max(p.y, lastY + 24)
             lastY = y
+            chipped.add(n)
             chip(p.x, y, n.label, n.domain)
           })
       }
+
+      // small always-on labels so the network reads without hovering
+      ctx.font = '9.5px "IBM Plex Mono", monospace'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = cvar('--muted')
+      projected.forEach(({ n, p }) => {
+        if (chipped.has(n)) return
+        const r = (n.layer === 3 ? 6.5 : 5) * p.s
+        ctx.globalAlpha = 0.35 + 0.6 * Math.min(p.s, 1)
+        ctx.fillText(n.label, Math.min(Math.max(p.x, 40), w - 40), p.y + r + 12)
+      })
+      ctx.globalAlpha = 1
+      ctx.textAlign = 'left'
+
+      s.projected = projected
 
       canvas.style.cursor = s.hover ? 'pointer' : s.dragging ? 'grabbing' : 'grab'
       raf = requestAnimationFrame(draw)
@@ -294,6 +324,9 @@ export default function NetworkFigure() {
       const p = pos(e)
       s.lastX = p.x
       s.lastY = p.y
+      s.pressX = p.x
+      s.pressY = p.y
+      s.pointer = p
       canvas.setPointerCapture(e.pointerId)
     }
     const move = (e) => {
@@ -307,7 +340,28 @@ export default function NetworkFigure() {
         s.idleAt = performance.now()
       }
     }
-    const up = () => { s.dragging = false; s.idleAt = performance.now() }
+    const up = (e) => {
+      s.dragging = false
+      s.idleAt = performance.now()
+      // a press that never turned into a drag is a click: open the node's section
+      const p = pos(e)
+      const wasDrag = Math.hypot(p.x - s.pressX, p.y - s.pressY) > 6
+      if (!wasDrag && s.projected) {
+        let best = null
+        let bestD = 18
+        s.projected.forEach(({ n, p: q }) => {
+          const d = Math.hypot(q.x - p.x, q.y - p.y)
+          if (d < bestD) { bestD = d; best = n }
+        })
+        if (best && best.href) {
+          const el = document.querySelector(best.href)
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' })
+            window.history.replaceState(null, '', best.href)
+          }
+        }
+      }
+    }
     const leave = () => { s.pointer = null }
 
     canvas.addEventListener('pointerdown', down)
@@ -343,7 +397,7 @@ export default function NetworkFigure() {
       <canvas ref={canvasRef} aria-label="interactive neural network of skills and shipped results" />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. drag to rotate.
+          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. drag to rotate; click a node to visit its section.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>

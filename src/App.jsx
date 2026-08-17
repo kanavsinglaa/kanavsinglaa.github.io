@@ -122,7 +122,7 @@ export default function App() {
           />
           <div className="xp-list">
             {experience.map((xp) => (
-              <article className="xp" key={xp.id}>
+              <article className="xp" key={xp.id} id={`xp-${xp.id}`}>
                 <div className="xp-meta">
                   <p className="xp-when">{xp.when}</p>
                   <p className="xp-where">{xp.where}</p>

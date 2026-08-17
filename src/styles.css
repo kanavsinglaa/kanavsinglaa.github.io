@@ -243,6 +243,7 @@ a:focus-visible, button:focus-visible {
   padding: 28px 0;
 }
 .xp + .xp { border-top: 1px dashed var(--line); }
+.xp, .sec { scroll-margin-top: 24px; }
 .xp-meta { font-size: 12px; color: var(--muted); }
 .xp-when { font-variant-numeric: tabular-nums; }
 .xp-where { color: var(--faint); }
