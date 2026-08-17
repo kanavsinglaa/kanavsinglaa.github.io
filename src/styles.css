@@ -283,30 +283,29 @@ a:focus-visible, button:focus-visible {
   top: 4px;
 }
 
-/* ---------- results ---------- */
-.results {
-  list-style: none;
+/* ---------- contributions ---------- */
+.contribs { list-style: none; display: flex; flex-direction: column; }
+.contrib {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  grid-template-columns: 200px 1fr;
+  gap: clamp(16px, 3vw, 48px);
+  padding: 26px 0;
 }
-.result {
-  background: var(--paper);
-  padding: 26px 22px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.result-value {
-  font-size: clamp(20px, 2.4vw, 27px);
-  font-weight: 600;
+.contrib + .contrib { border-top: 1px dashed var(--line); }
+.contrib-n {
+  font-size: 12px;
+  color: var(--faint);
   font-variant-numeric: tabular-nums;
-  align-self: flex-start;
-  padding: 2px 6px;
+  padding-top: 8px;
 }
-.result-label { color: var(--muted); font-size: 12.5px; max-width: 30ch; }
+.contrib-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 26px);
+}
+.contrib-title .hl { padding: 2px 8px; }
+.contrib-text { margin-top: 12px; color: var(--muted); font-size: 13.5px; max-width: var(--measure); line-height: 1.8; }
 
 /* ---------- discussion ---------- */
 .disc { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); }
@@ -369,13 +368,13 @@ a:focus-visible, button:focus-visible {
 /* ---------- responsive ---------- */
 @media (max-width: 920px) {
   .hero { grid-template-columns: 1fr; padding-top: 40px; }
-  .results, .skills, .projects { grid-template-columns: 1fr 1fr; }
+  .skills, .projects { grid-template-columns: 1fr 1fr; }
   .disc { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
-  .xp { grid-template-columns: 1fr; gap: 10px; }
+  .xp, .contrib { grid-template-columns: 1fr; gap: 10px; }
   .xp-meta { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
   .tag { margin-top: 0; }
-  .results, .skills, .projects { grid-template-columns: 1fr; }
+  .skills, .projects { grid-template-columns: 1fr; }
   .nav { flex-direction: column; gap: 8px; }
 }

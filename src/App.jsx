@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import NetworkFigure from './NetworkFigure.jsx'
 import {
-  contact, intro, discussion, experience, results, research, projects, education, skills,
+  contact, intro, discussion, experience, contributions, research, projects, education, skills,
 } from './data.js'
 
 const NAV = [
   ['work', '#work', 'voice'],
-  ['results', '#results', 'models'],
+  ['contributions', '#contributions', 'models'],
   ['discussion', '#discussion', 'product'],
   ['research', '#research', 'autonomy'],
   ['contact', '#contact', 'voice'],
@@ -147,19 +147,22 @@ export default function App() {
           </div>
         </section>
 
-        <section id="results" className="sec">
+        <section id="contributions" className="sec">
           <SectionHead
-            index="02" kind="fig." title="measured results"
-            note="a few numbers that carry the broader story."
+            index="02" kind="§" title="contributions"
+            note="threefold, as every good paper claims."
           />
-          <ul className="results">
-            {results.map((r, i) => (
-              <li key={i} className="result">
-                <span className={`result-value hl-${r.domain}`}>{r.value}</span>
-                <span className="result-label">{r.label}</span>
+          <ol className="contribs">
+            {contributions.map((c) => (
+              <li key={c.n} className="contrib">
+                <span className="contrib-n">{c.n}</span>
+                <div className="contrib-body">
+                  <h3 className="contrib-title"><span className={`hl hl-${c.domain}`}>{c.title}</span></h3>
+                  <p className="contrib-text">{c.text}</p>
+                </div>
               </li>
             ))}
-          </ul>
+          </ol>
         </section>
 
         <section id="discussion" className="sec">

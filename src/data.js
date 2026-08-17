@@ -114,17 +114,30 @@ export const experience = [
       'trained large planning models end to end: multimodal data pipelines, distributed GPU runs, and closed-loop evaluation.',
       'benchmarked imitation learning against reinforcement learning for planning; reproduced state-of-the-art papers as team baselines.',
       'built a modular closed-loop CARLA simulator used for RL training and offline evaluation.',
+      'contributed to team patents on learning-based autonomy.',
     ],
   },
 ]
 
-export const results = [
-  { value: '218 → 22 ms', label: 'first-sentence latency for live voice agents', domain: 'voice' },
-  { value: '1,500+', label: 'restaurants and hotels answering with voice AI', domain: 'voice' },
-  { value: '$0 → $500k', label: 'ARR in year one as technical co-founder', domain: 'product' },
-  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'voice' },
-  { value: '150+', label: 'hotels running live ML pricing', domain: 'product' },
-  { value: '94%', label: 'recall, real-time detection shipped to incheon airport', domain: 'models' },
+export const contributions = [
+  {
+    n: '01',
+    title: 'hard problems in hospitality',
+    domain: 'product',
+    text: 'messy, real-world demand, solved in production: voice agents live in 1,500+ restaurants and hotels, dynamic pricing running on 150+ properties, and a platform i co-founded that went from zero to half a million arr in a year.',
+  },
+  {
+    n: '02',
+    title: 'first-in, last-mile voice',
+    domain: 'voice',
+    text: 'owning the edge of the conversation: inference optimized until answers feel instant, llm spend cut by more than half, and small fine-tuned models doing big-model work on live calls.',
+  },
+  {
+    n: '03',
+    title: 'planning models that drive',
+    domain: 'autonomy',
+    text: 'contributed to patents and end-to-end planning for huawei’s self-driving system: multimodal data pipelines, distributed training, and closed-loop evaluation.',
+  },
 ]
 
 export const research = [
