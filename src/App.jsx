@@ -1,13 +1,13 @@
 import NetworkFigure from './NetworkFigure.jsx'
 import {
-  contact, intro, experience, results, research, projects, education, skills,
+  contact, intro, discussion, experience, results, research, projects, education, skills,
 } from './data.js'
 
 const NAV = [
   ['work', '#work', 'voice'],
   ['results', '#results', 'models'],
+  ['discussion', '#discussion', 'product'],
   ['research', '#research', 'autonomy'],
-  ['projects', '#projects', 'product'],
   ['contact', '#contact', 'voice'],
 ]
 
@@ -43,7 +43,7 @@ export default function App() {
       <a className="skip" href="#work">skip to content</a>
 
       <nav className="nav" aria-label="site">
-        <span className="nav-name">kanav singla — models &amp; inference</span>
+        <span className="nav-name">kanav singla · toronto</span>
         <div className="nav-links">
           {NAV.map(([label, href, domain]) => (
             <a key={label} href={href} className={`nav-link hl-h-${domain}`}>{label}</a>
@@ -101,7 +101,7 @@ export default function App() {
         <section id="results" className="sec">
           <SectionHead
             index="02" kind="fig." title="measured results"
-            note="numbers from production systems, each with a measurement method behind it."
+            note="a few numbers that carry the broader story."
           />
           <ul className="results">
             {results.map((r, i) => (
@@ -113,8 +113,23 @@ export default function App() {
           </ul>
         </section>
 
+        <section id="discussion" className="sec">
+          <SectionHead
+            index="03" kind="§" title="discussion"
+            note="why this profile compounds."
+          />
+          <div className="disc">
+            {discussion.map((d) => (
+              <div className="disc-item" key={d.title}>
+                <h3 className={`disc-title hl-${d.domain}`}>{d.title}</h3>
+                <p className="disc-text">{d.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section id="research" className="sec">
-          <SectionHead index="03" kind="table" title="research" />
+          <SectionHead index="04" kind="table" title="research" />
           <div className="xp-list">
             {research.map((r, i) => (
               <article className="xp" key={i}>
@@ -135,7 +150,7 @@ export default function App() {
         </section>
 
         <section id="skills" className="sec">
-          <SectionHead index="04" kind="table" title="instrumentation" />
+          <SectionHead index="05" kind="table" title="instrumentation" />
           <div className="skills">
             {skills.map((g) => (
               <div className="skill-group" key={g.group}>
@@ -147,7 +162,7 @@ export default function App() {
         </section>
 
         <section id="projects" className="sec">
-          <SectionHead index="05" kind="table" title="early work" />
+          <SectionHead index="06" kind="table" title="early work" />
           <div className="projects">
             {projects.map((p, i) => (
               <article className="project" key={i}>

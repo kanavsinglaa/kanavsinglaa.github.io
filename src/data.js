@@ -16,15 +16,33 @@ export const contact = {
 }
 
 export const intro = [
-  { t: 'i make voice models answer in ' },
-  { t: '22 milliseconds', hl: 'voice' },
-  { t: '. models & inference lead at sadie ai. before that i co-founded ' },
+  { t: 'i bridge ' },
+  { t: 'ai and creativity', hl: 'models' },
+  { t: '. these days that means models & inference at sadie ai — cutting inference cost and fine-tuning voice models for specific verticals, until the first sentence lands in ' },
+  { t: '22 ms', hl: 'voice' },
+  { t: '. i’m the technical co-founder of ' },
   { t: 'ampliphi', hl: 'product' },
-  { t: ' (0 → $500k arr in a year), was the ' },
-  { t: 'first ai hire', hl: 'models' },
-  { t: ' at valsoft, and shipped ' },
-  { t: 'self-driving planners', hl: 'autonomy' },
-  { t: ' at huawei’s noah’s ark lab. i build eval sets before models, and kill expensive ideas with data.' },
+  { t: ' (0 → $500k arr in a year), and cut my teeth training ' },
+  { t: 'planning models', hl: 'autonomy' },
+  { t: ' end-to-end for huawei’s self-driving lab. i build eval sets before models, and kill expensive ideas with data.' },
+]
+
+export const discussion = [
+  {
+    title: 'speed',
+    domain: 'voice',
+    text: 'model stacks have a half-life of months now. i treat that as the game: learn continuously, push each new tool to its cracks, and ship with it while everyone else is still forming an opinion.',
+  },
+  {
+    title: 'taste',
+    domain: 'product',
+    text: 'i got here through the bridge between ai and creativity — generative art, music, interfaces that feel alive. products get judged with a designer’s eye, not just a benchmark suite.',
+  },
+  {
+    title: 'depth',
+    domain: 'autonomy',
+    text: 'taste without depth is decoration. mine is earned: training planning models end-to-end and contributing to patents in huawei’s self-driving lab, and engineering science at uoft — the most rigorous undergraduate engineering program in canada.',
+  },
 ]
 
 export const experience = [
@@ -95,12 +113,12 @@ export const experience = [
 ]
 
 export const results = [
-  { value: '218 → 22 ms', label: 'first-sentence latency, warmed voice pipeline', domain: 'voice' },
-  { value: '−55%', label: 'LLM spend, validated by finance to within 4%', domain: 'voice' },
-  { value: '40% → 87%', label: 'int8 ONNX classifier accuracy, A/B on live calls', domain: 'models' },
-  { value: '$0 → $500k', label: 'ARR at ampliphi in under a year', domain: 'product' },
-  { value: '100+', label: 'hotels on shipped forecasting & dynamic pricing', domain: 'product' },
-  { value: '−72%', label: 'acoustic discontinuity on production replays', domain: 'voice' },
+  { value: '218 → 22 ms', label: 'first-sentence latency for live voice agents', domain: 'voice' },
+  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'voice' },
+  { value: '$0 → $500k', label: 'ARR in year one as technical co-founder', domain: 'product' },
+  { value: '100+', label: 'hotels running live ML pricing', domain: 'product' },
+  { value: 'patents', label: 'contributed on learning-based autonomy at huawei', domain: 'autonomy' },
+  { value: '94%', label: 'recall, real-time detection shipped to incheon airport', domain: 'models' },
 ]
 
 export const research = [

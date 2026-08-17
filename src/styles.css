@@ -242,6 +242,17 @@ a:focus-visible, button:focus-visible {
 }
 .result-label { color: var(--muted); font-size: 12.5px; max-width: 30ch; }
 
+/* ---------- discussion ---------- */
+.disc { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); }
+.disc-title {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  margin-bottom: 12px;
+}
+.disc-text { color: var(--ink); font-size: 13.5px; line-height: 1.8; max-width: 44ch; }
+
 /* ---------- skills ---------- */
 .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); }
 .skill-name {
@@ -289,6 +300,7 @@ a:focus-visible, button:focus-visible {
 @media (max-width: 920px) {
   .hero { grid-template-columns: 1fr; padding-top: 40px; }
   .results, .skills, .projects { grid-template-columns: 1fr 1fr; }
+  .disc { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
   .xp { grid-template-columns: 1fr; gap: 10px; }
