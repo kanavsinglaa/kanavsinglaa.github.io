@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import NetworkFigure from './NetworkFigure.jsx'
 import {
   contact, intro, discussion, experience, results, research, projects, education, skills,
@@ -13,6 +14,45 @@ const NAV = [
 
 function Hl({ domain, children }) {
   return <mark className={`hl hl-${domain}`}>{children}</mark>
+}
+
+function IntroSeg({ seg }) {
+  const inner = seg.hl ? <Hl domain={seg.hl}>{seg.t}</Hl> : seg.t
+  if (seg.url) {
+    return (
+      <a className="intro-link" href={seg.url} target="_blank" rel="noreferrer">
+        {inner}
+      </a>
+    )
+  }
+  return <span>{inner}</span>
+}
+
+function resolvedTheme() {
+  return (
+    document.documentElement.dataset.theme ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  )
+}
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState(resolvedTheme)
+  const flip = () => {
+    const next = theme === 'dark' ? 'light' : 'dark'
+    document.documentElement.dataset.theme = next
+    try { localStorage.setItem('theme', next) } catch (e) { /* private mode */ }
+    setTheme(next)
+  }
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={flip}
+      aria-label={theme === 'dark' ? 'switch to light mode' : 'switch to dark mode'}
+    >
+      {theme === 'dark' ? '☀' : '☾'}
+    </button>
+  )
 }
 
 function Tag({ domain }) {
@@ -43,12 +83,16 @@ export default function App() {
       <a className="skip" href="#work">skip to content</a>
 
       <nav className="nav" aria-label="site">
-        <span className="nav-name">kanav singla · toronto</span>
+        <span className="nav-brand">
+          <img className="nav-avatar" src="/avatar.png" alt="cartoon avatar of kanav" />
+          <span className="nav-name">kanav singla · toronto</span>
+        </span>
         <div className="nav-links">
           {NAV.map(([label, href, domain]) => (
             <a key={label} href={href} className={`nav-link hl-h-${domain}`}>{label}</a>
           ))}
           <a href={contact.resume} className="nav-link nav-resume" target="_blank" rel="noreferrer">resume ↗</a>
+          <ThemeToggle />
         </div>
       </nav>
 
@@ -57,9 +101,7 @@ export default function App() {
           <div className="hero-copy">
             <p className="eyebrow">abstract</p>
             <p className="intro">
-              {intro.map((seg, i) =>
-                seg.hl ? <Hl key={i} domain={seg.hl}>{seg.t}</Hl> : <span key={i}>{seg.t}</span>,
-              )}
+              {intro.map((seg, i) => <IntroSeg key={i} seg={seg} />)}
             </p>
             <p className="hero-meta">
               {contact.location.toLowerCase()} · open to startup roles
@@ -192,7 +234,10 @@ export default function App() {
       <footer id="contact" className="footer">
         <p className="eyebrow">appendix a: contact</p>
         <a className="footer-email" href={`mailto:${contact.email}`}>{contact.email}</a>
-        <p className="footer-sig">Kanav Singla</p>
+        <p className="footer-sig">
+          <img className="footer-avatar" src="/avatar.png" alt="" />
+          Kanav Singla
+        </p>
         <div className="footer-links">
           <a href={contact.github} target="_blank" rel="noreferrer">github</a>
           <a href={contact.linkedin} target="_blank" rel="noreferrer">linkedin</a>

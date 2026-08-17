@@ -5,19 +5,6 @@ import { useEffect, useRef, useState } from 'react'
 // Output layer: shipped, measured results. Drag to rotate; hover for labels;
 // "run forward pass" pulses activation input → output.
 
-const DOT = {
-  voice: '#D98E1B',
-  models: '#3B9E56',
-  product: '#8A63C9',
-  autonomy: '#3E7BD0',
-}
-const HL = {
-  voice: '#FFDFAE',
-  models: '#CBEFCB',
-  product: '#E4D6F7',
-  autonomy: '#CFE4FD',
-}
-
 // deterministic pseudo-random so the layout is stable across loads
 function rand(seed) {
   const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453
@@ -52,7 +39,7 @@ function buildGraph() {
       ['22 ms reply', 'voice'],
       ['1,500+ venues live', 'voice'],
       ['$500k arr', 'product'],
-      ['patents on autonomy', 'autonomy'],
+      ['94% recall @ incheon', 'models'],
     ]],
   ]
 
@@ -128,6 +115,9 @@ export default function NetworkFigure() {
     const wrap = wrapRef.current
     const ctx = canvas.getContext('2d')
     const s = stateRef.current
+    // live computed style: reads reflect the active theme every frame
+    const rootStyle = getComputedStyle(document.documentElement)
+    const cvar = (name) => rootStyle.getPropertyValue(name).trim()
     s.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (s.reduced) s.autoRotate = false
 
@@ -175,9 +165,9 @@ export default function NetworkFigure() {
       const pad = 5
       const bx = Math.min(Math.max(x + 10, 4), w - tw - pad * 2 - 4)
       const by = Math.max(y - 26, 4)
-      ctx.fillStyle = HL[domain]
+      ctx.fillStyle = cvar(`--hl-${domain}`)
       ctx.fillRect(bx, by, tw + pad * 2, 18)
-      ctx.fillStyle = '#181818'
+      ctx.fillStyle = cvar('--ink')
       ctx.fillText(text, bx + pad, by + 13)
     }
 
@@ -188,8 +178,8 @@ export default function NetworkFigure() {
         s.yaw += 0.0016
       }
 
-      // floor grid, y = -1.45
-      ctx.strokeStyle = '#E2E1D8'
+      // floor grid
+      ctx.strokeStyle = cvar('--grid')
       ctx.lineWidth = 1
       const gy = -1.3
       for (let gx = -1.9; gx <= 1.91; gx += 0.475) {
@@ -205,7 +195,7 @@ export default function NetworkFigure() {
 
       // axis labels, pinned in 3d at the floor's x extremes
       ctx.font = '10px "IBM Plex Mono", monospace'
-      ctx.fillStyle = '#9A9A90'
+      ctx.fillStyle = cvar('--faint')
       const lIn = project({ x: -1.9, y: gy - 0.16, z: 0 })
       const lOut = project({ x: 1.9, y: gy - 0.16, z: 0 })
       ctx.textAlign = 'center'
@@ -233,7 +223,7 @@ export default function NetworkFigure() {
         const mid = (a.x + b.x) / 2
         const active = mid < front
         const depthAlpha = 0.5 + 0.5 * Math.min(pa.s, pb.s)
-        ctx.strokeStyle = active ? '#181818' : '#C9C8BD'
+        ctx.strokeStyle = active ? cvar('--ink') : cvar('--line')
         ctx.globalAlpha = active ? 0.75 : 0.55 * depthAlpha
         ctx.lineWidth = active ? 1.2 : 1
         ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke()
@@ -249,14 +239,14 @@ export default function NetworkFigure() {
           const r = (n.layer === 3 ? 6.5 : 5) * p.s
           ctx.beginPath()
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
-          ctx.fillStyle = DOT[n.domain]
+          ctx.fillStyle = cvar(`--dot-${n.domain}`)
           ctx.globalAlpha = 0.35 + 0.65 * Math.min(p.s, 1)
           ctx.fill()
           ctx.globalAlpha = 1
           if (active) {
             ctx.beginPath()
             ctx.arc(p.x, p.y, r + 3, 0, Math.PI * 2)
-            ctx.strokeStyle = '#181818'
+            ctx.strokeStyle = cvar('--ink')
             ctx.lineWidth = 1
             ctx.stroke()
           }

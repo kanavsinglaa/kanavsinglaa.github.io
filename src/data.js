@@ -18,13 +18,15 @@ export const contact = {
 export const intro = [
   { t: 'i bridge ' },
   { t: 'ai and creativity', hl: 'models' },
-  { t: '. at sadie ai i work on models & inference for voice: shaving ' },
+  { t: '. at ' },
+  { t: 'sadie ai', url: 'https://www.heysadie.ai/' },
+  { t: ' i work on models & inference for voice: shaving ' },
   { t: 'the silence before the first word', hl: 'voice' },
   { t: ', trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
-  { t: 'ampliphi', hl: 'product' },
+  { t: 'ampliphi', hl: 'product', url: 'https://www.getampliphi.com/about-us' },
   { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
-  { t: ' for self-driving cars at huawei’s noah’s ark lab. i like hard problems, long timelines, and instruments that feel alive.' },
+  { t: ' for self-driving cars at huawei’s noah’s ark lab. i like hard problems and instruments that feel alive.' },
 ]
 
 export const discussion = [
@@ -41,7 +43,7 @@ export const discussion = [
   {
     title: 'depth',
     domain: 'autonomy',
-    text: 'taste without depth is decoration. mine is earned: training planning models end-to-end and contributing to patents in huawei’s self-driving lab, and engineering science at uoft, the most rigorous undergraduate engineering program in canada.',
+    text: 'taste without depth is decoration. mine is earned: training planning models end-to-end for huawei’s self-driving lab, and engineering science at uoft, the most rigorous undergraduate engineering program in canada.',
   },
 ]
 
@@ -112,7 +114,6 @@ export const experience = [
       'reproduced state-of-the-art planning papers from scratch as internal team baselines.',
       'orchestrated distributed training across GPU clusters and large multimodal datasets.',
       'built a modular closed-loop CARLA simulator for training and offline evaluation.',
-      'contributed to team patents on learning-based autonomy.',
     ],
   },
 ]
@@ -121,8 +122,8 @@ export const results = [
   { value: '218 → 22 ms', label: 'first-sentence latency for live voice agents', domain: 'voice' },
   { value: '1,500+', label: 'restaurants and hotels answering with voice AI', domain: 'voice' },
   { value: '$0 → $500k', label: 'ARR in year one as technical co-founder', domain: 'product' },
-  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'product' },
-  { value: 'patents', label: 'contributed on learning-based autonomy at huawei', domain: 'autonomy' },
+  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'voice' },
+  { value: '100+', label: 'hotels running live ML pricing', domain: 'product' },
   { value: '94%', label: 'recall, real-time detection shipped to incheon airport', domain: 'models' },
 ]
 
