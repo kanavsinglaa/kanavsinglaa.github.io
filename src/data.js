@@ -1,4 +1,4 @@
-// All site content, mapped from the Aug 2026 resume.
+// All site content, mapped from the Aug 2026 resume (Kanav_Singla_Resume_1.pdf).
 // Domains drive the color system: each entry is tagged with one.
 //   voice  = voice & inference (amber)
 //   models = models & training (green)
@@ -18,13 +18,13 @@ export const contact = {
 export const intro = [
   { t: 'i bridge ' },
   { t: 'ai and creativity', hl: 'models' },
-  { t: '. these days that means models & inference at sadie ai — cutting inference cost and fine-tuning voice models for specific verticals, until the first sentence lands in ' },
-  { t: '22 ms', hl: 'voice' },
-  { t: '. i’m the technical co-founder of ' },
+  { t: '. at sadie ai i work on models & inference for voice: shaving ' },
+  { t: 'the silence before the first word', hl: 'voice' },
+  { t: ', trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
   { t: 'ampliphi', hl: 'product' },
-  { t: ' (0 → $500k arr in a year), and cut my teeth training ' },
+  { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
-  { t: ' end-to-end for huawei’s self-driving lab. i build eval sets before models, and kill expensive ideas with data.' },
+  { t: ' for self-driving cars at huawei’s noah’s ark lab. i like hard problems, long timelines, and instruments that feel alive.' },
 ]
 
 export const discussion = [
@@ -36,39 +36,42 @@ export const discussion = [
   {
     title: 'taste',
     domain: 'product',
-    text: 'i got here through the bridge between ai and creativity — generative art, music, interfaces that feel alive. products get judged with a designer’s eye, not just a benchmark suite.',
+    text: 'i got here through the bridge between ai and creativity: generative art, music, interfaces that feel alive. products get judged with a designer’s eye, not just a benchmark suite.',
   },
   {
     title: 'depth',
     domain: 'autonomy',
-    text: 'taste without depth is decoration. mine is earned: training planning models end-to-end and contributing to patents in huawei’s self-driving lab, and engineering science at uoft — the most rigorous undergraduate engineering program in canada.',
+    text: 'taste without depth is decoration. mine is earned: training planning models end-to-end and contributing to patents in huawei’s self-driving lab, and engineering science at uoft, the most rigorous undergraduate engineering program in canada.',
   },
 ]
 
 export const experience = [
   {
     id: 'sadie',
-    role: 'models & inference lead',
+    role: 'models & inference',
     org: 'Sadie AI',
-    sub: 'multi-tenant real-time voice agent platform',
-    when: 'apr 2026 — present',
+    url: 'https://www.heysadie.ai/',
+    sub: 'voice AI for hospitality, live in 1,500+ restaurants and hotels',
+    when: 'apr 2026 → present',
     where: 'toronto',
     domain: 'voice',
     points: [
       'dropped first-sentence latency from 218 ms to 22 ms by warming models at session start; benchmarked GPU endpoints to low-200 ms p50 time-to-first-token.',
-      'shipped an int8 ONNX classifier (40% → 87% accuracy) that cut per-turn LLM tokens 20% input / 33% output, measured by A/B on live production calls.',
-      'cut LLM spend ~55% through a targeted inference migration, validated independently by finance to within 4%.',
-      'stabilized delivery across turns, cutting acoustic discontinuity 72% on production call replays.',
-      'run LoRA fine-tunes on managed inference endpoints to make voice models task-specific and controllable.',
-      'build eval sets before models: gold-case suites with adversarial acceptance traps the baseline fails by design; killed two costly directions with that data.',
+      'fine-tune models for specific verticals so restaurants, hotels, and car rental each book in their own language.',
+      'shipped an int8 ONNX classifier (40% to 87% accuracy) that cut per-turn LLM tokens 20% input and 33% output on live production calls.',
+      'cut LLM spend ~55% with a targeted inference migration, validated independently by finance to within 4%.',
+      'own the data path end to end: mine production calls, build labeling pipelines, and freeze gold eval sets before every training run.',
+      'stabilized turn-to-turn delivery, cutting acoustic discontinuity 72% on production call replays.',
+      'killed two costly bets early with data, not opinion, using traps the baseline fails by design.',
     ],
   },
   {
     id: 'ampliphi',
     role: 'technical co-founder & ai lead',
     org: 'Ampliphi',
+    url: 'https://www.getampliphi.com/about-us',
     sub: 'a Valsoft company',
-    when: 'jan 2025 — apr 2026',
+    when: 'jan 2025 → apr 2026',
     where: 'toronto',
     domain: 'product',
     points: [
@@ -83,8 +86,9 @@ export const experience = [
     id: 'valsoft',
     role: 'ai solutions lead',
     org: 'Valsoft / Aspire Software',
+    url: 'https://www.aspiresoftware.com/ai-labs/',
     sub: 'ai founding engineer (2023) · ai solutions architect (2024) · ai solutions lead (2025)',
-    when: 'jun 2023 — apr 2026',
+    when: 'jun 2023 → apr 2026',
     where: 'toronto',
     domain: 'models',
     points: [
@@ -98,8 +102,9 @@ export const experience = [
     id: 'huawei',
     role: 'ai research engineer',
     org: 'Noah’s Ark Lab, Huawei',
+    url: 'https://www.noahlab.com.hk/en',
     sub: null,
-    when: 'jun 2021 — sep 2022',
+    when: 'jun 2021 → sep 2022',
     where: 'markham',
     domain: 'autonomy',
     points: [
@@ -114,21 +119,22 @@ export const experience = [
 
 export const results = [
   { value: '218 → 22 ms', label: 'first-sentence latency for live voice agents', domain: 'voice' },
-  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'voice' },
+  { value: '1,500+', label: 'restaurants and hotels answering with voice AI', domain: 'voice' },
   { value: '$0 → $500k', label: 'ARR in year one as technical co-founder', domain: 'product' },
-  { value: '100+', label: 'hotels running live ML pricing', domain: 'product' },
+  { value: '−55%', label: 'LLM inference spend, at production scale', domain: 'product' },
   { value: 'patents', label: 'contributed on learning-based autonomy at huawei', domain: 'autonomy' },
   { value: '94%', label: 'recall, real-time detection shipped to incheon airport', domain: 'models' },
 ]
 
 export const research = [
   {
-    title: 'undergraduate thesis — autonomous racing',
-    org: 'Toronto Intelligent Systems Lab (TISL) · with Toyota Research Institute',
-    when: 'sep 2022 — jun 2023',
+    title: 'undergraduate thesis: autonomous racing',
+    org: 'Toronto Intelligent Systems Lab × Toyota Research Institute',
+    url: 'https://tisl.cs.toronto.edu/',
+    when: '2022 → 2023',
     domain: 'autonomy',
     points: [
-      'joint TISL × Toyota Research Institute project on autonomous racing.',
+      'joint TISL and Toyota Research Institute project on autonomous racing.',
       'learned online adaptation as track conditions shift at run time.',
       'advised by Prof. Igor Gilitschenski (TISL).',
     ],
@@ -136,7 +142,8 @@ export const research = [
   {
     title: 'machine learning summer researcher',
     org: 'University of Toronto',
-    when: 'may — aug 2020',
+    url: null,
+    when: 'may → aug 2020',
     domain: 'models',
     points: [
       'evaluated 25+ detection models; lifted recall 10%.',
@@ -149,21 +156,21 @@ export const research = [
 export const projects = [
   {
     title: 'computer vision lead, autonomous rover team',
-    org: 'UofT Robotics Association · 2021 — 2022',
+    org: 'UofT Robotics Association · 2021 → 2022',
     domain: 'autonomy',
     text: 'led vision pipelines for two IGVC competition rovers; deployed detection and classification with TorchScript; managed a 15-person team.',
   },
   {
     title: 'junior machine learning engineer',
-    org: 'Omdena × Zzapp Malaria · jul — sep 2020',
+    org: 'Omdena × Zzapp Malaria · jul → sep 2020',
     domain: 'models',
     text: 'built satellite-imagery ML for malaria prevention with Zzapp Malaria, winner of the $5M IBM Watson AI XPRIZE.',
   },
   {
     title: 'software developer',
-    org: 'sMart, student marketplace · jul — oct 2020',
+    org: 'sMart, student marketplace · jul → oct 2020',
     domain: 'product',
-    text: 'built a student–mentor marketplace with personalized mentor recommendations. Django, React.',
+    text: 'built a student and mentor marketplace with personalized mentor recommendations. Django, React.',
   },
 ]
 
@@ -182,11 +189,16 @@ export const skills = [
   {
     group: 'inference',
     domain: 'voice',
-    items: ['real-time streaming', 'latency profiling', 'TTFT tuning', 'managed endpoints', 'distributed GPU training', 'LiveKit pipelines', 'TorchScript', 'Docker'],
+    items: ['real-time streaming', 'latency profiling', 'TTFT tuning', 'managed endpoints', 'distributed GPU training', 'LiveKit pipelines', 'TorchScript'],
+  },
+  {
+    group: 'data & evals',
+    domain: 'product',
+    items: ['dataset curation from production traffic', 'labeling pipelines', 'gold eval sets', 'adversarial test design', 'production A/B testing', 'cost & capacity modeling'],
   },
   {
     group: 'practice',
-    domain: 'product',
-    items: ['eval harness design', 'production A/B testing', 'cost & capacity modeling', 'Python', 'SQL', 'mypy / ruff'],
+    domain: 'autonomy',
+    items: ['Python', 'SQL', 'mypy / ruff', 'Docker'],
   },
 ]

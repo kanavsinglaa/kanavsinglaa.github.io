@@ -87,7 +87,14 @@ export default function App() {
                   <Tag domain={xp.domain} />
                 </div>
                 <div className="xp-body">
-                  <h3>{xp.role} <span className="xp-org">@ {xp.org}</span></h3>
+                  <h3>
+                    {xp.role}{' '}
+                    <span className="xp-org">
+                      @ {xp.url
+                        ? <a href={xp.url} target="_blank" rel="noreferrer">{xp.org}</a>
+                        : xp.org}
+                    </span>
+                  </h3>
                   {xp.sub && <p className="xp-sub">{xp.sub}</p>}
                   <ul>
                     {xp.points.map((pt, i) => <li key={i}>{pt}</li>)}
@@ -139,7 +146,11 @@ export default function App() {
                 </div>
                 <div className="xp-body">
                   <h3>{r.title}</h3>
-                  <p className="xp-sub">{r.org}</p>
+                  <p className="xp-sub">
+                    {r.url
+                      ? <a href={r.url} target="_blank" rel="noreferrer">{r.org}</a>
+                      : r.org}
+                  </p>
                   <ul>
                     {r.points.map((pt, j) => <li key={j}>{pt}</li>)}
                   </ul>
@@ -179,7 +190,7 @@ export default function App() {
       </main>
 
       <footer id="contact" className="footer">
-        <p className="eyebrow">appendix a — contact</p>
+        <p className="eyebrow">appendix a: contact</p>
         <a className="footer-email" href={`mailto:${contact.email}`}>{contact.email}</a>
         <p className="footer-sig">Kanav Singla</p>
         <div className="footer-links">

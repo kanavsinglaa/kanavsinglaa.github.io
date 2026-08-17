@@ -194,6 +194,12 @@ a:focus-visible, button:focus-visible {
 }
 .xp-body h3 { font-size: 15px; font-weight: 600; }
 .xp-org { font-weight: 400; color: var(--muted); }
+.xp-org a, .xp-sub a {
+  color: inherit;
+  text-decoration-color: var(--faint);
+  text-underline-offset: 3px;
+}
+.xp-org a:hover, .xp-sub a:hover { color: var(--ink); text-decoration-color: var(--ink); }
 .xp-sub {
   font-family: var(--serif);
   font-style: italic;
@@ -254,7 +260,7 @@ a:focus-visible, button:focus-visible {
 .disc-text { color: var(--ink); font-size: 13.5px; line-height: 1.8; max-width: 44ch; }
 
 /* ---------- skills ---------- */
-.skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); }
+.skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 48px); }
 .skill-name {
   display: inline-block;
   font-size: 13px;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-// fig. 01 — career rendered as a neural network.
+// fig. 01: career rendered as a neural network.
 // Input layer: signals Kanav works from. Hidden layers: skills.
 // Output layer: shipped, measured results. Drag to rotate; hover for labels;
 // "run forward pass" pulses activation input → output.
@@ -50,9 +50,9 @@ function buildGraph() {
     ]],
     [1.7, [
       ['22 ms reply', 'voice'],
-      ['−55% llm spend', 'voice'],
+      ['1,500+ venues live', 'voice'],
       ['$500k arr', 'product'],
-      ['94% recall @ incheon', 'models'],
+      ['patents on autonomy', 'autonomy'],
     ]],
   ]
 
@@ -353,14 +353,14 @@ export default function NetworkFigure() {
       <canvas ref={canvasRef} aria-label="interactive neural network of skills and shipped results" />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01 — a career as a forward pass: signals in, skills in the hidden layers, shipped results out. drag to rotate.
+          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. drag to rotate.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>
             ▷ run forward pass
           </button>
           <span className="netfig-ms" aria-live="polite">
-            {ms === null ? 'ttft: — ms' : `ttft: ${ms} ms`}
+            {ms === null ? 'ttft: idle' : `ttft: ${ms} ms`}
             {ms === 22 && <s> 218 ms</s>}
           </span>
         </span>
