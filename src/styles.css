@@ -23,11 +23,12 @@
   --measure: 62ch;
   --gutter: clamp(20px, 5vw, 72px);
 
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-/* dark theme: explicit choice via toggle */
+/* light is the default everywhere; dark is opt-in via the toggle */
 :root[data-theme='dark'] {
+  color-scheme: dark;
   --paper: #141410;
   --ink: #e9e7dc;
   --muted: #98968a;
@@ -44,28 +45,6 @@
   --dot-models: #4cb868;
   --dot-product: #a683df;
   --dot-autonomy: #5e97ea;
-}
-
-/* dark theme: system preference, unless light explicitly chosen */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --paper: #141410;
-    --ink: #e9e7dc;
-    --muted: #98968a;
-    --faint: #6c6a5f;
-    --grid: #24231c;
-    --line: #333127;
-
-    --hl-voice: #4d3a10;
-    --hl-models: #1e4526;
-    --hl-product: #3e2a5a;
-    --hl-autonomy: #1c3a63;
-
-    --dot-voice: #e5a62e;
-    --dot-models: #4cb868;
-    --dot-product: #a683df;
-    --dot-autonomy: #5e97ea;
-  }
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

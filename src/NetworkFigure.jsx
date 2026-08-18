@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 
 // fig. 01: career rendered as a neural network.
-// Input layer: signals Kanav works from. Hidden layers: skills.
-// Output layer: shipped, measured results. Drag to rotate; hover for labels;
-// "run forward pass" pulses activation input → output.
+// Four layers, read left to right: the signals Kanav works from, the models he
+// builds with, the practice that makes them trustworthy, and what shipped.
+// Every edge is a real path through his work, not decoration.
 
 // deterministic pseudo-random so the layout is stable across loads
 function rand(seed) {
@@ -11,71 +11,129 @@ function rand(seed) {
   return x - Math.floor(x)
 }
 
-function buildGraph() {
-  const layers = [
-    // x, nodes: [label, domain, section the node links to]
-    [-1.7, [
-      ['audio stream', 'voice', '#xp-sadie'],
-      ['market data', 'product', '#xp-ampliphi'],
-      ['camera feed', 'autonomy', '#xp-huawei'],
-      ['raw documents', 'models', '#xp-valsoft'],
-    ]],
-    [-0.57, [
-      ['pytorch', 'models', '#skills'],
-      ['onnx int8', 'voice', '#xp-sadie'],
+const LAYERS = [
+  {
+    x: -1.75,
+    caption: 'signals in',
+    nodes: [
+      ['live call audio', 'voice', '#xp-sadie'],
+      ['production call logs', 'voice', '#xp-sadie'],
+      ['hotel demand & rates', 'product', '#xp-ampliphi'],
+      ['m&a documents', 'models', '#xp-valsoft'],
+      ['driving scenes', 'autonomy', '#xp-huawei'],
+      ['aerial & camera imagery', 'models', '#projects'],
+    ],
+  },
+  {
+    x: -0.58,
+    caption: 'models',
+    nodes: [
+      ['streaming stt / tts', 'voice', '#skills'],
+      ['int8 onnx classifier', 'voice', '#xp-sadie'],
       ['lora fine-tunes', 'models', '#xp-sadie'],
-      ['rag retrieval', 'models', '#xp-valsoft'],
+      ['llm extraction & rag', 'models', '#xp-valsoft'],
       ['demand forecasting', 'product', '#xp-ampliphi'],
       ['learned planning', 'autonomy', '#xp-huawei'],
-    ]],
-    [0.57, [
-      ['latency profiling', 'voice', '#contributions'],
-      ['eval harnesses', 'models', '#skills'],
-      ['production a/b', 'product', '#skills'],
-      ['quantization', 'voice', '#skills'],
-      ['distributed training', 'autonomy', '#xp-huawei'],
-    ]],
-    [1.7, [
-      ['22 ms reply', 'voice', '#xp-sadie'],
+      ['detection & vision', 'models', '#projects'],
+    ],
+  },
+  {
+    x: 0.58,
+    caption: 'practice',
+    nodes: [
+      ['latency & ttft profiling', 'voice', '#contributions'],
+      ['gold eval sets', 'models', '#skills'],
+      ['dataset curation', 'models', '#skills'],
+      ['production a/b tests', 'product', '#skills'],
+      ['inference cost modeling', 'product', '#contributions'],
+      ['distributed gpu training', 'autonomy', '#xp-huawei'],
+    ],
+  },
+  {
+    x: 1.75,
+    caption: 'results out',
+    nodes: [
+      ['22 ms first sentence', 'voice', '#xp-sadie'],
       ['1,500+ venues live', 'voice', '#xp-sadie'],
+      ['−55% llm spend', 'voice', '#xp-sadie'],
       ['$500k arr', 'product', '#xp-ampliphi'],
+      ['150+ hotels priced', 'product', '#xp-ampliphi'],
+      ['self-driving planner', 'autonomy', '#xp-huawei'],
       ['94% recall @ incheon', 'models', '#research'],
-    ]],
-  ]
+    ],
+  },
+]
 
+// Each pair is a claim: this input fed that model, this model demanded that
+// practice, this practice produced that result.
+const EDGES = [
+  // signals → models
+  ['live call audio', 'streaming stt / tts'],
+  ['live call audio', 'int8 onnx classifier'],
+  ['production call logs', 'lora fine-tunes'],
+  ['production call logs', 'int8 onnx classifier'],
+  ['hotel demand & rates', 'demand forecasting'],
+  ['hotel demand & rates', 'llm extraction & rag'],
+  ['m&a documents', 'llm extraction & rag'],
+  ['driving scenes', 'learned planning'],
+  ['driving scenes', 'detection & vision'],
+  ['aerial & camera imagery', 'detection & vision'],
+
+  // models → practice
+  ['streaming stt / tts', 'latency & ttft profiling'],
+  ['streaming stt / tts', 'gold eval sets'],
+  ['int8 onnx classifier', 'latency & ttft profiling'],
+  ['int8 onnx classifier', 'inference cost modeling'],
+  ['lora fine-tunes', 'dataset curation'],
+  ['lora fine-tunes', 'gold eval sets'],
+  ['llm extraction & rag', 'gold eval sets'],
+  ['llm extraction & rag', 'inference cost modeling'],
+  ['demand forecasting', 'production a/b tests'],
+  ['demand forecasting', 'gold eval sets'],
+  ['learned planning', 'distributed gpu training'],
+  ['learned planning', 'gold eval sets'],
+  ['detection & vision', 'distributed gpu training'],
+  ['detection & vision', 'dataset curation'],
+
+  // practice → results
+  ['latency & ttft profiling', '22 ms first sentence'],
+  ['latency & ttft profiling', '1,500+ venues live'],
+  ['inference cost modeling', '−55% llm spend'],
+  ['dataset curation', '−55% llm spend'],
+  ['dataset curation', '94% recall @ incheon'],
+  ['gold eval sets', '1,500+ venues live'],
+  ['gold eval sets', '$500k arr'],
+  ['gold eval sets', 'self-driving planner'],
+  ['production a/b tests', '$500k arr'],
+  ['production a/b tests', '150+ hotels priced'],
+  ['distributed gpu training', 'self-driving planner'],
+  ['distributed gpu training', '94% recall @ incheon'],
+]
+
+function buildGraph() {
   const nodes = []
-  layers.forEach(([x, defs], li) => {
-    const n = defs.length
-    defs.forEach(([label, domain, href], i) => {
+  const byLabel = new Map()
+  LAYERS.forEach((layer, li) => {
+    const n = layer.nodes.length
+    layer.nodes.forEach(([label, domain, href], i) => {
       const fy = n === 1 ? 0.5 : i / (n - 1)
-      nodes.push({
+      const node = {
         label,
         domain,
         href,
         layer: li,
-        x: x + (rand(li * 10 + i) - 0.5) * 0.2,
-        y: (fy - 0.5) * 1.9 + (rand(li * 31 + i * 7) - 0.5) * 0.24,
+        x: layer.x + (rand(li * 10 + i) - 0.5) * 0.18,
+        y: (fy - 0.5) * 2 + (rand(li * 31 + i * 7) - 0.5) * 0.18,
         z: (rand(li * 53 + i * 13) - 0.5) * 1.1,
-      })
+      }
+      nodes.push(node)
+      byLabel.set(label, node)
     })
   })
 
-  const edges = []
-  const byLayer = [0, 1, 2, 3].map((l) => nodes.filter((nd) => nd.layer === l))
-  for (let l = 0; l < 3; l++) {
-    byLayer[l].forEach((a, i) => {
-      const next = byLayer[l + 1]
-      const picks = new Set()
-      const k = 2 + Math.floor(rand(l * 97 + i * 17) * 2) // 2–3 edges each
-      for (let j = 0; j < k; j++) {
-        picks.add(Math.floor(rand(l * 7 + i * 29 + j * 71) * next.length))
-      }
-      // guarantee same-domain linkage when available
-      const same = next.findIndex((b) => b.domain === a.domain)
-      if (same >= 0) picks.add(same)
-      picks.forEach((pi) => edges.push([a, next[pi]]))
-    })
-  }
+  const edges = EDGES.map(([a, b]) => [byLabel.get(a), byLabel.get(b)]).filter(
+    ([a, b]) => a && b,
+  )
   return { nodes, edges }
 }
 
@@ -87,6 +145,8 @@ export default function NetworkFigure() {
   const wrapRef = useRef(null)
   const stateRef = useRef({
     yaw: -0.32,
+    yawCenter: -0.32,
+    driftT: 0,
     pitch: 0.28,
     autoRotate: true,
     dragging: false,
@@ -129,7 +189,7 @@ export default function NetworkFigure() {
     const resize = () => {
       const rect = wrap.getBoundingClientRect()
       w = rect.width
-      h = Math.max(340, Math.min(520, rect.width * 0.62))
+      h = Math.max(360, Math.min(560, rect.width * 0.66))
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
@@ -165,7 +225,7 @@ export default function NetworkFigure() {
       const tw = ctx.measureText(text).width
       const pad = 5
       const bx = Math.min(Math.max(x + 10, 4), w - tw - pad * 2 - 4)
-      const by = Math.max(y - 26, 4)
+      const by = Math.min(Math.max(y - 26, 4), h - 22)
       ctx.fillStyle = cvar(`--hl-${domain}`)
       ctx.fillRect(bx, by, tw + pad * 2, 18)
       ctx.fillStyle = cvar('--ink')
@@ -175,8 +235,11 @@ export default function NetworkFigure() {
     const draw = (now) => {
       ctx.clearRect(0, 0, w, h)
 
+      // idle motion sways around the last framing instead of spinning past it,
+      // so the layers always read left to right
       if (s.autoRotate && !s.dragging && now - s.idleAt > 2600) {
-        s.yaw += 0.0016
+        s.driftT += 0.0035
+        s.yaw = s.yawCenter + Math.sin(s.driftT) * 0.3
       }
 
       // floor grid
@@ -194,14 +257,15 @@ export default function NetworkFigure() {
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
       }
 
-      // axis labels, pinned in 3d at the floor's x extremes
+      // one caption per layer, pinned to the floor so they rotate with the graph
       ctx.font = '10px "IBM Plex Mono", monospace'
       ctx.fillStyle = cvar('--faint')
-      const lIn = project({ x: -1.9, y: gy - 0.16, z: 0 })
-      const lOut = project({ x: 1.9, y: gy - 0.16, z: 0 })
       ctx.textAlign = 'center'
-      ctx.fillText('signals in', Math.max(lIn.x, 34), lIn.y)
-      ctx.fillText('results out', Math.min(lOut.x, w - 38), lOut.y)
+      LAYERS.forEach((layer) => {
+        const lp = project({ x: layer.x, y: gy - 0.18, z: 0 })
+        const half = ctx.measureText(layer.caption).width / 2 + 4
+        ctx.fillText(layer.caption, Math.min(Math.max(lp.x, half), w - half), lp.y)
+      })
       ctx.textAlign = 'left'
 
       // forward-pass wavefront in graph-x space
@@ -218,18 +282,53 @@ export default function NetworkFigure() {
       // edges
       const projected = GRAPH.nodes.map((n) => ({ n, p: project(n) }))
       const pmap = new Map(projected.map((o) => [o.n, o.p]))
+
+      // resolve hover first: it decides how the edges below are drawn
+      let hover = null
+      if (s.pointer) {
+        let bestD = 18
+        projected.forEach(({ n, p }) => {
+          const d = Math.hypot(p.x - s.pointer.x, p.y - s.pointer.y)
+          if (d < bestD) { bestD = d; hover = n }
+        })
+      }
+      s.hover = hover
+      const neighbors = new Set()
+      if (hover) {
+        GRAPH.edges.forEach(([a, b]) => {
+          if (a === hover) neighbors.add(b)
+          if (b === hover) neighbors.add(a)
+        })
+      }
       GRAPH.edges.forEach(([a, b]) => {
         const pa = pmap.get(a)
         const pb = pmap.get(b)
         const mid = (a.x + b.x) / 2
         const active = mid < front
         const depthAlpha = 0.5 + 0.5 * Math.min(pa.s, pb.s)
-        ctx.strokeStyle = active ? cvar('--ink') : cvar('--line')
-        ctx.globalAlpha = active ? 0.75 : 0.55 * depthAlpha
-        ctx.lineWidth = active ? 1.2 : 1
+        const onPath = hover && (a === hover || b === hover)
+        if (onPath) {
+          ctx.strokeStyle = cvar(`--dot-${hover.domain}`)
+          ctx.globalAlpha = 0.95
+          ctx.lineWidth = 1.6
+        } else {
+          ctx.strokeStyle = active ? cvar('--ink') : cvar('--line')
+          ctx.globalAlpha = (active ? 0.75 : 0.55 * depthAlpha) * (hover ? 0.3 : 1)
+          ctx.lineWidth = active ? 1.2 : 1
+        }
         ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke()
         ctx.globalAlpha = 1
       })
+
+      // flashlight: how strongly the cursor lights a point, 0 outside the beam
+      const beam = Math.min(190, Math.max(110, Math.min(w, h) * 0.3))
+      const lit = (p) => {
+        if (!s.pointer) return 0
+        const d = Math.hypot(p.x - s.pointer.x, p.y - s.pointer.y)
+        if (d > beam) return 0
+        const t = 1 - d / beam
+        return t * t
+      }
 
       // nodes, far to near
       projected
@@ -237,13 +336,25 @@ export default function NetworkFigure() {
         .sort((a, b) => b.p.depth - a.p.depth)
         .forEach(({ n, p }) => {
           const active = n.x < front
-          const r = (n.layer === 3 ? 6.5 : 5) * p.s
+          const g = lit(p)
+          const r = (n.layer === 3 ? 6.5 : 5) * p.s * (1 + 0.3 * g)
           ctx.beginPath()
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
           ctx.fillStyle = cvar(`--dot-${n.domain}`)
-          ctx.globalAlpha = 0.35 + 0.65 * Math.min(p.s, 1)
+          const focus = !hover || n === hover || neighbors.has(n)
+          ctx.globalAlpha =
+            Math.min(1, 0.3 + 0.6 * Math.min(p.s, 1) + 0.5 * g) * (focus ? 1 : 0.35)
           ctx.fill()
           ctx.globalAlpha = 1
+          if (g > 0.12) {
+            ctx.beginPath()
+            ctx.arc(p.x, p.y, r + 4, 0, Math.PI * 2)
+            ctx.strokeStyle = cvar(`--dot-${n.domain}`)
+            ctx.globalAlpha = 0.5 * g
+            ctx.lineWidth = 1
+            ctx.stroke()
+            ctx.globalAlpha = 1
+          }
           if (active) {
             ctx.beginPath()
             ctx.arc(p.x, p.y, r + 3, 0, Math.PI * 2)
@@ -257,19 +368,10 @@ export default function NetworkFigure() {
       // nodes up as it reaches them; afterwards the outputs stay labeled
       const chipped = new Set()
 
-      s.hover = null
-      if (s.pointer) {
-        let best = null
-        let bestD = 18
-        projected.forEach(({ n, p }) => {
-          const d = Math.hypot(p.x - s.pointer.x, p.y - s.pointer.y)
-          if (d < bestD) { bestD = d; best = { n, p } }
-        })
-        if (best) {
-          s.hover = best.n
-          chipped.add(best.n)
-          chip(best.p.x, best.p.y, best.n.label, best.n.domain)
-        }
+      if (hover) {
+        const hp = pmap.get(hover)
+        chipped.add(hover)
+        chip(hp.x, hp.y, hover.label, hover.domain)
       }
 
       if (s.passStart >= 0 && !s.passDone) {
@@ -295,15 +397,18 @@ export default function NetworkFigure() {
           })
       }
 
-      // small always-on labels so the network reads without hovering
+      // labels inside the flashlight beam, fading out toward its edge
       ctx.font = '9.5px "IBM Plex Mono", monospace'
       ctx.textAlign = 'center'
-      ctx.fillStyle = cvar('--muted')
+      ctx.fillStyle = cvar('--ink')
       projected.forEach(({ n, p }) => {
         if (chipped.has(n)) return
+        const g = lit(p)
+        const alpha = neighbors.has(n) ? 1 : Math.min(1, g * 1.6)
+        if (alpha < 0.06) return
         const r = (n.layer === 3 ? 6.5 : 5) * p.s
-        ctx.globalAlpha = 0.35 + 0.6 * Math.min(p.s, 1)
-        ctx.fillText(n.label, Math.min(Math.max(p.x, 40), w - 40), p.y + r + 12)
+        ctx.globalAlpha = alpha
+        ctx.fillText(n.label, Math.min(Math.max(p.x, 40), w - 40), p.y + r + 13)
       })
       ctx.globalAlpha = 1
       ctx.textAlign = 'left'
@@ -343,6 +448,9 @@ export default function NetworkFigure() {
     const up = (e) => {
       s.dragging = false
       s.idleAt = performance.now()
+      // resume the sway from wherever the viewer left the graph
+      s.yawCenter = s.yaw
+      s.driftT = 0
       // a press that never turned into a drag is a click: open the node's section
       const p = pos(e)
       const wasDrag = Math.hypot(p.x - s.pressX, p.y - s.pressY) > 6
@@ -356,7 +464,7 @@ export default function NetworkFigure() {
         if (best && best.href) {
           const el = document.querySelector(best.href)
           if (el) {
-            el.scrollIntoView({ behavior: 'smooth' })
+            el.scrollIntoView({ behavior: s.reduced ? 'auto' : 'smooth' })
             window.history.replaceState(null, '', best.href)
           }
         }
@@ -397,7 +505,7 @@ export default function NetworkFigure() {
       <canvas ref={canvasRef} aria-label="interactive neural network of skills and shipped results" />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. drag to rotate; click a node to visit its section.
+          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. sweep the cursor to read the nodes, drag to rotate, click to visit a section.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>

@@ -29,10 +29,7 @@ function IntroSeg({ seg }) {
 }
 
 function resolvedTheme() {
-  return (
-    document.documentElement.dataset.theme ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-  )
+  return document.documentElement.dataset.theme || 'light'
 }
 
 function ThemeToggle() {
