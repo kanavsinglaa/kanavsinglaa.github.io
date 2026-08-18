@@ -18,10 +18,10 @@ const LAYERS = [
     nodes: [
       ['live call audio', 'voice', '#xp-sadie'],
       ['production call logs', 'voice', '#xp-sadie'],
-      ['hotel demand & rates', 'product', '#xp-ampliphi'],
       ['m&a documents', 'models', '#xp-valsoft'],
-      ['driving scenes', 'autonomy', '#xp-huawei'],
       ['aerial & camera imagery', 'models', '#projects'],
+      ['hotel demand & rates', 'product', '#xp-ampliphi'],
+      ['driving scenes', 'autonomy', '#xp-huawei'],
     ],
   },
   {
@@ -32,9 +32,9 @@ const LAYERS = [
       ['int8 onnx classifier', 'voice', '#xp-sadie'],
       ['lora fine-tunes', 'models', '#xp-sadie'],
       ['llm extraction & rag', 'models', '#xp-valsoft'],
+      ['detection & vision', 'models', '#projects'],
       ['demand forecasting', 'product', '#xp-ampliphi'],
       ['learned planning', 'autonomy', '#xp-huawei'],
-      ['detection & vision', 'models', '#projects'],
     ],
   },
   {
@@ -44,8 +44,8 @@ const LAYERS = [
       ['latency & ttft profiling', 'voice', '#contributions'],
       ['gold eval sets', 'models', '#skills'],
       ['dataset curation', 'models', '#skills'],
-      ['production a/b tests', 'product', '#skills'],
       ['inference cost modeling', 'product', '#contributions'],
+      ['production a/b tests', 'product', '#skills'],
       ['distributed gpu training', 'autonomy', '#xp-huawei'],
     ],
   },
@@ -56,10 +56,10 @@ const LAYERS = [
       ['22 ms first sentence', 'voice', '#xp-sadie'],
       ['1,500+ venues live', 'voice', '#xp-sadie'],
       ['−55% llm spend', 'voice', '#xp-sadie'],
+      ['94% recall @ incheon', 'models', '#research'],
       ['$500k arr', 'product', '#xp-ampliphi'],
       ['150+ hotels priced', 'product', '#xp-ampliphi'],
       ['self-driving planner', 'autonomy', '#xp-huawei'],
-      ['94% recall @ incheon', 'models', '#research'],
     ],
   },
 ]
@@ -122,9 +122,9 @@ function buildGraph() {
         domain,
         href,
         layer: li,
-        x: layer.x + (rand(li * 10 + i) - 0.5) * 0.18,
-        y: (fy - 0.5) * 2 + (rand(li * 31 + i * 7) - 0.5) * 0.18,
-        z: (rand(li * 53 + i * 13) - 0.5) * 1.1,
+        x: layer.x + (rand(li * 10 + i) - 0.5) * 0.12,
+        y: (fy - 0.5) * 2.05 + (rand(li * 31 + i * 7) - 0.5) * 0.08,
+        z: (rand(li * 53 + i * 13) - 0.5) * 0.8,
       }
       nodes.push(node)
       byLabel.set(label, node)
@@ -138,7 +138,7 @@ function buildGraph() {
 }
 
 const GRAPH = buildGraph()
-const PASS_MS = 2200
+const PASS_MS = 5200
 
 export default function NetworkFigure() {
   const canvasRef = useRef(null)
@@ -189,7 +189,10 @@ export default function NetworkFigure() {
     const resize = () => {
       const rect = wrap.getBoundingClientRect()
       w = rect.width
-      h = Math.max(360, Math.min(560, rect.width * 0.66))
+      // narrow screens get a taller, more portrait plate so the lanes breathe
+      h = w < 620
+        ? Math.max(430, Math.min(560, w * 1.35))
+        : Math.max(380, Math.min(620, w * 0.46))
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
@@ -211,10 +214,11 @@ export default function NetworkFigure() {
       zr = p.y * sp + zr * cp
       const f = 4.2
       const scale = f / (f + zr)
-      const unit = Math.min(w, h) / (w < 520 ? 4.6 : 3.7)
+      const unitX = w / (w < 620 ? 4.4 : 4.7)
+      const unitY = h / 2.85
       return {
-        x: w / 2 + xr * scale * unit,
-        y: h / 2 - yr * scale * unit,
+        x: w / 2 + xr * scale * unitX,
+        y: h / 2 - yr * scale * unitY,
         s: scale,
         depth: zr,
       }
@@ -242,29 +246,22 @@ export default function NetworkFigure() {
         s.yaw = s.yawCenter + Math.sin(s.driftT) * 0.3
       }
 
-      // floor grid
-      ctx.strokeStyle = cvar('--grid')
-      ctx.lineWidth = 1
-      const gy = -1.3
-      for (let gx = -1.9; gx <= 1.91; gx += 0.475) {
-        const a = project({ x: gx, y: gy, z: -1.2 })
-        const b = project({ x: gx, y: gy, z: 1.2 })
-        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
-      }
-      for (let gz = -1.2; gz <= 1.21; gz += 0.4) {
-        const a = project({ x: -1.9, y: gy, z: gz })
-        const b = project({ x: 1.9, y: gy, z: gz })
-        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
-      }
-
-      // one caption per layer, pinned to the floor so they rotate with the graph
+      // layer headers sit along the base of the plate and track the rotation,
+      // so the four stages stay named without a grid cluttering the field
       ctx.font = '10px "IBM Plex Mono", monospace'
-      ctx.fillStyle = cvar('--faint')
       ctx.textAlign = 'center'
       LAYERS.forEach((layer) => {
-        const lp = project({ x: layer.x, y: gy - 0.18, z: 0 })
-        const half = ctx.measureText(layer.caption).width / 2 + 4
-        ctx.fillText(layer.caption, Math.min(Math.max(lp.x, half), w - half), lp.y)
+        const lp = project({ x: layer.x, y: 0, z: 0 })
+        const half = ctx.measureText(layer.caption).width / 2 + 6
+        const cx = Math.min(Math.max(lp.x, half), w - half)
+        ctx.fillStyle = cvar('--faint')
+        ctx.fillText(layer.caption, cx, h - 6)
+        ctx.strokeStyle = cvar('--line')
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(cx - half + 6, h - 20)
+        ctx.lineTo(cx + half - 6, h - 20)
+        ctx.stroke()
       })
       ctx.textAlign = 'left'
 
@@ -272,7 +269,7 @@ export default function NetworkFigure() {
       let front = -Infinity
       if (s.passStart >= 0) {
         const t = Math.min((now - s.passStart) / PASS_MS, 1)
-        const eased = 1 - Math.pow(1 - t, 3)
+        const eased = t * t * (3 - 2 * t) // smoothstep: even pace across the layers
         front = -1.9 + eased * 3.8
         const shownMs = Math.round(22 * eased)
         setMs((prev) => (prev === shownMs ? prev : shownMs))
@@ -337,7 +334,7 @@ export default function NetworkFigure() {
         .forEach(({ n, p }) => {
           const active = n.x < front
           const g = lit(p)
-          const r = (n.layer === 3 ? 6.5 : 5) * p.s * (1 + 0.3 * g)
+          const r = (n.layer === 3 ? 7 : 5.6) * p.s * (1 + 0.3 * g)
           ctx.beginPath()
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
           ctx.fillStyle = cvar(`--dot-${n.domain}`)
@@ -377,7 +374,7 @@ export default function NetworkFigure() {
       if (s.passStart >= 0 && !s.passDone) {
         projected.forEach(({ n, p }) => {
           const since = front - n.x
-          if (since > 0 && since < 0.62 && !chipped.has(n)) {
+          if (since > 0 && since < 0.55 && !chipped.has(n)) {
             chipped.add(n)
             chip(p.x, p.y, n.label, n.domain)
           }
@@ -398,7 +395,7 @@ export default function NetworkFigure() {
       }
 
       // labels inside the flashlight beam, fading out toward its edge
-      ctx.font = '9.5px "IBM Plex Mono", monospace'
+      ctx.font = '10px "IBM Plex Mono", monospace'
       ctx.textAlign = 'center'
       ctx.fillStyle = cvar('--ink')
       projected.forEach(({ n, p }) => {
@@ -406,7 +403,7 @@ export default function NetworkFigure() {
         const g = lit(p)
         const alpha = neighbors.has(n) ? 1 : Math.min(1, g * 1.6)
         if (alpha < 0.06) return
-        const r = (n.layer === 3 ? 6.5 : 5) * p.s
+        const r = (n.layer === 3 ? 7 : 5.6) * p.s
         ctx.globalAlpha = alpha
         ctx.fillText(n.label, Math.min(Math.max(p.x, 40), w - 40), p.y + r + 13)
       })

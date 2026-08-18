@@ -26,7 +26,9 @@ export const intro = [
   { t: 'ampliphi', hl: 'product', url: 'https://www.getampliphi.com/about-us' },
   { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
-  { t: ' for self-driving cars at huawei’s noah’s ark lab. i like hard problems and instruments that feel alive.' },
+  { t: ' for self-driving cars at ' },
+  { t: 'huawei’s noah’s ark lab', url: 'https://www.noahlab.com.hk/en' },
+  { t: '. i like hard problems and instruments that feel alive.' },
 ]
 
 export const discussion = [
@@ -143,8 +145,11 @@ export const contributions = [
 export const research = [
   {
     title: 'undergraduate thesis: autonomous racing',
-    org: 'Toronto Intelligent Systems Lab × Toyota Research Institute',
-    url: 'https://tisl.cs.toronto.edu/',
+    orgSegs: [
+      { t: 'Toronto Intelligent Systems Lab', url: 'https://tisl.cs.toronto.edu/' },
+      { t: ' × ' },
+      { t: 'Toyota Research Institute', url: 'https://www.tri.global/' },
+    ],
     when: '2022 → 2023',
     domain: 'autonomy',
     points: [
@@ -155,8 +160,7 @@ export const research = [
   },
   {
     title: 'machine learning summer researcher',
-    org: 'University of Toronto',
-    url: null,
+    orgSegs: [{ t: 'University of Toronto', url: 'https://www.utoronto.ca/' }],
     when: 'may → aug 2020',
     domain: 'models',
     points: [
@@ -170,19 +174,33 @@ export const research = [
 export const projects = [
   {
     title: 'computer vision lead, autonomous rover team',
-    org: 'UofT Robotics Association · 2021 → 2022',
+    org: 'UofT Robotics Association',
+    url: 'https://www.utra.ca/',
+    when: '2021 → 2022',
     domain: 'autonomy',
-    text: 'led vision pipelines for two IGVC competition rovers; deployed detection and classification with TorchScript; managed a 15-person team.',
+    textSegs: [
+      { t: 'led vision pipelines for two ' },
+      { t: 'IGVC', url: 'http://www.igvc.org/' },
+      { t: ' competition rovers; deployed detection and classification with TorchScript; managed a 15-person team.' },
+    ],
   },
   {
     title: 'junior machine learning engineer',
-    org: 'Omdena × Zzapp Malaria · jul → sep 2020',
+    org: 'Omdena',
+    url: 'https://www.omdena.com/',
+    when: 'jul → sep 2020',
     domain: 'models',
-    text: 'built satellite-imagery ML for malaria prevention with Zzapp Malaria, winner of the $5M IBM Watson AI XPRIZE.',
+    textSegs: [
+      { t: 'built satellite-imagery ML for malaria prevention with ' },
+      { t: 'Zzapp Malaria', url: 'https://zzappmalaria.com/' },
+      { t: ', winner of the $5M IBM Watson AI XPRIZE.' },
+    ],
   },
   {
     title: 'software developer',
-    org: 'sMart, student marketplace · jul → oct 2020',
+    org: 'sMart, student marketplace',
+    url: null,
+    when: 'jul → oct 2020',
     domain: 'product',
     text: 'built a student and mentor marketplace with personalized mentor recommendations. Django, React.',
   },
@@ -190,6 +208,8 @@ export const projects = [
 
 export const education = {
   school: 'University of Toronto',
+  schoolUrl: 'https://www.utoronto.ca/',
+  programUrl: 'https://engsci.utoronto.ca/',
   degree: 'BASc, Engineering Science (honors)',
   detail: 'specialization in robotics and AI · minor in business · 2018 → 2023',
 }

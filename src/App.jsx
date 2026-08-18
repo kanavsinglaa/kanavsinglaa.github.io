@@ -52,6 +52,10 @@ function ThemeToggle() {
   )
 }
 
+function Segs({ segs }) {
+  return segs.map((seg, i) => <IntroSeg key={i} seg={seg} />)
+}
+
 function Tag({ domain }) {
   const names = {
     voice: 'voice & inference',
@@ -109,6 +113,9 @@ export default function App() {
               <a href={contact.linkedin} target="_blank" rel="noreferrer">linkedin</a>
             </p>
           </div>
+        </section>
+
+        <section className="plate" aria-label="figure 1">
           <NetworkFigure />
         </section>
 
@@ -188,11 +195,7 @@ export default function App() {
                 </div>
                 <div className="xp-body">
                   <h3>{r.title}</h3>
-                  <p className="xp-sub">
-                    {r.url
-                      ? <a href={r.url} target="_blank" rel="noreferrer">{r.org}</a>
-                      : r.org}
-                  </p>
+                  <p className="xp-sub"><Segs segs={r.orgSegs} /></p>
                   <ul>
                     {r.points.map((pt, j) => <li key={j}>{pt}</li>)}
                   </ul>
@@ -220,13 +223,27 @@ export default function App() {
             {projects.map((p, i) => (
               <article className="project" key={i}>
                 <h3>{p.title}</h3>
-                <p className="project-org">{p.org}</p>
-                <p className="project-text">{p.text}</p>
+                <p className="project-org">
+                  {p.url
+                    ? <a href={p.url} target="_blank" rel="noreferrer">{p.org}</a>
+                    : p.org}
+                  {' · '}{p.when}
+                </p>
+                <p className="project-text">
+                  {p.textSegs ? <Segs segs={p.textSegs} /> : p.text}
+                </p>
               </article>
             ))}
           </div>
           <p className="edu">
-            {education.degree.toLowerCase()} · {education.school} · {education.detail}
+            <a href={education.programUrl} target="_blank" rel="noreferrer">
+              {education.degree.toLowerCase()}
+            </a>
+            {' · '}
+            <a href={education.schoolUrl} target="_blank" rel="noreferrer">
+              {education.school}
+            </a>
+            {' · '}{education.detail}
           </p>
         </section>
       </main>
