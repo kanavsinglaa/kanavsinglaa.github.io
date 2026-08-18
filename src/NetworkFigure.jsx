@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 
-// fig. 01: career rendered as a neural network.
-// Four layers, read left to right: the signals Kanav works from, the models he
+// fig. 01: a career drawn as a layered network.
+// Four columns read left to right — the signals Kanav works from, the models he
 // builds with, the practice that makes them trustworthy, and what shipped.
-// Every edge is a real path through his work, not decoration.
+// Nodes sit in fixed horizontal lanes by domain, so a path through one domain
+// runs straight across and every edge below is a real claim about the work.
 
-// deterministic pseudo-random so the layout is stable across loads
-function rand(seed) {
-  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453
-  return x - Math.floor(x)
-}
+const DOMAIN_LANE = { voice: 1.02, models: 0.3, product: -0.42, autonomy: -1.04 }
+const Y_MID = 0.1 // midpoint of the occupied lane range, keeps the plate balanced
+const LANE_STEP = 0.21
 
 const LAYERS = [
   {
-    x: -1.75,
+    x: -1.62,
     caption: 'signals in',
     nodes: [
       ['live call audio', 'voice', '#xp-sadie'],
@@ -25,7 +24,7 @@ const LAYERS = [
     ],
   },
   {
-    x: -0.58,
+    x: -0.54,
     caption: 'models',
     nodes: [
       ['streaming stt / tts', 'voice', '#skills'],
@@ -38,19 +37,19 @@ const LAYERS = [
     ],
   },
   {
-    x: 0.58,
+    x: 0.54,
     caption: 'practice',
     nodes: [
       ['latency & ttft profiling', 'voice', '#contributions'],
       ['gold eval sets', 'models', '#skills'],
       ['dataset curation', 'models', '#skills'],
-      ['inference cost modeling', 'product', '#contributions'],
       ['production a/b tests', 'product', '#skills'],
+      ['inference cost modeling', 'product', '#contributions'],
       ['distributed gpu training', 'autonomy', '#xp-huawei'],
     ],
   },
   {
-    x: 1.75,
+    x: 1.62,
     caption: 'results out',
     nodes: [
       ['22 ms first sentence', 'voice', '#xp-sadie'],
@@ -64,10 +63,9 @@ const LAYERS = [
   },
 ]
 
-// Each pair is a claim: this input fed that model, this model demanded that
+// Each pair is a claim: this signal fed that model, this model demanded that
 // practice, this practice produced that result.
 const EDGES = [
-  // signals → models
   ['live call audio', 'streaming stt / tts'],
   ['live call audio', 'int8 onnx classifier'],
   ['production call logs', 'lora fine-tunes'],
@@ -79,7 +77,6 @@ const EDGES = [
   ['driving scenes', 'detection & vision'],
   ['aerial & camera imagery', 'detection & vision'],
 
-  // models → practice
   ['streaming stt / tts', 'latency & ttft profiling'],
   ['streaming stt / tts', 'gold eval sets'],
   ['int8 onnx classifier', 'latency & ttft profiling'],
@@ -95,7 +92,6 @@ const EDGES = [
   ['detection & vision', 'distributed gpu training'],
   ['detection & vision', 'dataset curation'],
 
-  // practice → results
   ['latency & ttft profiling', '22 ms first sentence'],
   ['latency & ttft profiling', '1,500+ venues live'],
   ['inference cost modeling', '−55% llm spend'],
@@ -113,18 +109,31 @@ const EDGES = [
 function buildGraph() {
   const nodes = []
   const byLabel = new Map()
+
   LAYERS.forEach((layer, li) => {
-    const n = layer.nodes.length
+    // group by lane, then spread each lane's members around its centre line
+    const lanes = new Map()
+    layer.nodes.forEach(([label, domain]) => {
+      if (!lanes.has(domain)) lanes.set(domain, [])
+      lanes.get(domain).push(label)
+    })
+    const slot = new Map()
+    lanes.forEach((members, domain) => {
+      members.forEach((label, i) => {
+        slot.set(label, DOMAIN_LANE[domain] + (i - (members.length - 1) / 2) * LANE_STEP)
+      })
+    })
+
     layer.nodes.forEach(([label, domain, href], i) => {
-      const fy = n === 1 ? 0.5 : i / (n - 1)
       const node = {
         label,
         domain,
         href,
         layer: li,
-        x: layer.x + (rand(li * 10 + i) - 0.5) * 0.12,
-        y: (fy - 0.5) * 2.05 + (rand(li * 31 + i * 7) - 0.5) * 0.08,
-        z: (rand(li * 53 + i * 13) - 0.5) * 0.8,
+        x: layer.x,
+        y: slot.get(label),
+        // a whisper of depth so rotation reads, never enough to tangle the lanes
+        z: ((i % 3) - 1) * 0.19,
       }
       nodes.push(node)
       byLabel.set(label, node)
@@ -140,23 +149,24 @@ function buildGraph() {
 const GRAPH = buildGraph()
 const PASS_MS = 5200
 
-export default function NetworkFigure({ children }) {
+export default function NetworkFigure() {
   const canvasRef = useRef(null)
-  const overlayRef = useRef(null)
-  const stageRef = useRef(null)
   const wrapRef = useRef(null)
   const stateRef = useRef({
-    yaw: -0.32,
-    yawCenter: -0.32,
+    yaw: -0.16,
+    yawCenter: -0.16,
     driftT: 0,
-    pitch: 0.28,
+    pitch: 0.16,
     autoRotate: true,
     dragging: false,
     lastX: 0,
     lastY: 0,
+    pressX: 0,
+    pressY: 0,
     idleAt: 0,
     hover: null,
     pointer: null,
+    projected: null,
     passStart: -1,
     passDone: false,
     reduced: false,
@@ -165,23 +175,15 @@ export default function NetworkFigure({ children }) {
 
   const runPass = () => {
     const s = stateRef.current
-    if (s.reduced) {
-      s.passStart = performance.now() - PASS_MS // jump to finished state
-    } else {
-      s.passStart = performance.now()
-    }
+    s.passStart = s.reduced ? performance.now() - PASS_MS : performance.now()
     s.passDone = false
   }
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const overlay = overlayRef.current
-    const stage = stageRef.current
+    const wrap = wrapRef.current
     const ctx = canvas.getContext('2d')
-    // the field sits behind the abstract; the overlay paints labels on top of it
-    const octx = overlay.getContext('2d')
     const s = stateRef.current
-    // live computed style: reads reflect the active theme every frame
     const rootStyle = getComputedStyle(document.documentElement)
     const cvar = (name) => rootStyle.getPropertyValue(name).trim()
     s.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -192,20 +194,18 @@ export default function NetworkFigure({ children }) {
     let raf = 0
 
     const resize = () => {
-      const rect = stage.getBoundingClientRect()
+      const rect = wrap.getBoundingClientRect()
       w = rect.width
-      h = rect.height
+      h = w < 560 ? Math.max(420, w * 1.16) : Math.max(430, Math.min(540, w * 0.86))
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
-      overlay.width = w * dpr
-      overlay.height = h * dpr
+      canvas.style.height = `${h}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      octx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
     const ro = new ResizeObserver(resize)
-    ro.observe(stage)
+    ro.observe(wrap)
 
     const project = (p) => {
       const cy = Math.cos(s.yaw)
@@ -214,81 +214,62 @@ export default function NetworkFigure({ children }) {
       const sp = Math.sin(s.pitch)
       const xr = p.x * cy - p.z * sy
       let zr = p.x * sy + p.z * cy
-      const yr = p.y * cp - zr * sp
+      const yr = (p.y - Y_MID) * cp - zr * sp
       zr = p.y * sp + zr * cp
-      const f = 4.2
+      const f = 6.5
       const scale = f / (f + zr)
-      const unitX = w / (w < 620 ? 4.4 : 5)
-      const unitY = h / 2.85
+      const unitX = w / 3.9
+      const unitY = (h - 58) / 2.55
       return {
-        x: w * (w < 920 ? 0.5 : 0.54) + xr * scale * unitX,
-        y: h / 2 - yr * scale * unitY,
+        x: w / 2 + xr * scale * unitX,
+        y: (h - 34) / 2 - yr * scale * unitY,
         s: scale,
         depth: zr,
       }
     }
 
+    const label = (x, y, text, alpha) => {
+      ctx.font = '10px "IBM Plex Mono", monospace'
+      const tw = ctx.measureText(text).width
+      const cx = Math.min(Math.max(x, tw / 2 + 4), w - tw / 2 - 4)
+      ctx.globalAlpha = alpha * 0.9
+      ctx.fillStyle = cvar('--paper')
+      ctx.fillRect(cx - tw / 2 - 4, y - 10, tw + 8, 14)
+      ctx.globalAlpha = alpha
+      ctx.fillStyle = cvar('--ink')
+      ctx.textAlign = 'center'
+      ctx.fillText(text, cx, y)
+      ctx.textAlign = 'left'
+      ctx.globalAlpha = 1
+    }
+
     const chip = (x, y, text, domain) => {
-      octx.font = '11px "IBM Plex Mono", monospace'
-      const tw = octx.measureText(text).width
+      ctx.font = '11px "IBM Plex Mono", monospace'
+      const tw = ctx.measureText(text).width
       const pad = 5
-      const bx = Math.min(Math.max(x + 10, 4), w - tw - pad * 2 - 4)
-      const by = Math.min(Math.max(y - 26, 4), h - 22)
-      octx.fillStyle = cvar(`--hl-${domain}`)
-      octx.fillRect(bx, by, tw + pad * 2, 18)
-      octx.fillStyle = cvar('--ink')
-      octx.fillText(text, bx + pad, by + 13)
+      const bx = Math.min(Math.max(x - tw / 2 - pad, 3), w - tw - pad * 2 - 3)
+      const by = Math.min(Math.max(y - 26, 3), h - 22)
+      ctx.fillStyle = cvar(`--hl-${domain}`)
+      ctx.fillRect(bx, by, tw + pad * 2, 18)
+      ctx.fillStyle = cvar('--ink')
+      ctx.fillText(text, bx + pad, by + 13)
     }
 
     const draw = (now) => {
       ctx.clearRect(0, 0, w, h)
-      octx.clearRect(0, 0, w, h)
 
-      // idle motion sways around the last framing instead of spinning past it,
-      // so the layers always read left to right
       if (s.autoRotate && !s.dragging && now - s.idleAt > 2600) {
-        s.driftT += 0.0035
-        s.yaw = s.yawCenter + Math.sin(s.driftT) * 0.3
+        s.driftT += 0.0022
+        s.yaw = s.yawCenter + Math.sin(s.driftT) * 0.12
       }
 
-      // layer headers sit along the base of the plate and track the rotation,
-      // so the four stages stay named without a grid cluttering the field
-      octx.font = '10px "IBM Plex Mono", monospace'
-      octx.textAlign = 'center'
-      LAYERS.forEach((layer) => {
-        const lp = project({ x: layer.x, y: 0, z: 0 })
-        const half = octx.measureText(layer.caption).width / 2 + 6
-        const cx = Math.min(Math.max(lp.x, half), w - half)
-        octx.fillStyle = cvar('--faint')
-        octx.fillText(layer.caption, cx, h - 6)
-        octx.strokeStyle = cvar('--line')
-        octx.lineWidth = 1
-        octx.beginPath()
-        octx.moveTo(cx - half + 6, h - 20)
-        octx.lineTo(cx + half - 6, h - 20)
-        octx.stroke()
-      })
-      octx.textAlign = 'left'
-
-      // forward-pass wavefront in graph-x space
-      let front = -Infinity
-      if (s.passStart >= 0) {
-        const t = Math.min((now - s.passStart) / PASS_MS, 1)
-        const eased = t * t * (3 - 2 * t) // smoothstep: even pace across the layers
-        front = -1.9 + eased * 3.8
-        const shownMs = Math.round(22 * eased)
-        setMs((prev) => (prev === shownMs ? prev : shownMs))
-        if (t >= 1 && !s.passDone) s.passDone = true
-      }
-
-      // edges
       const projected = GRAPH.nodes.map((n) => ({ n, p: project(n) }))
       const pmap = new Map(projected.map((o) => [o.n, o.p]))
 
-      // resolve hover first: it decides how the edges below are drawn
+      // hover first: it decides how the edges are drawn
       let hover = null
       if (s.pointer) {
-        let bestD = 18
+        let bestD = 20
         projected.forEach(({ n, p }) => {
           const d = Math.hypot(p.x - s.pointer.x, p.y - s.pointer.y)
           if (d < bestD) { bestD = d; hover = n }
@@ -302,28 +283,67 @@ export default function NetworkFigure({ children }) {
           if (b === hover) neighbors.add(a)
         })
       }
+
+      // the activation wavefront, in graph-x
+      let front = -Infinity
+      if (s.passStart >= 0) {
+        const t = Math.min((now - s.passStart) / PASS_MS, 1)
+        const eased = t * t * (3 - 2 * t)
+        front = -1.85 + eased * 3.7
+        const shown = Math.round(22 * eased)
+        setMs((prev) => (prev === shown ? prev : shown))
+        if (t >= 1) s.passDone = true
+      }
+
+      // layer captions along the base
+      ctx.font = '10px "IBM Plex Mono", monospace'
+      ctx.textAlign = 'center'
+      LAYERS.forEach((layer) => {
+        const lp = project({ x: layer.x, y: 0, z: 0 })
+        const half = ctx.measureText(layer.caption).width / 2
+        const cx = Math.min(Math.max(lp.x, half + 6), w - half - 6)
+        ctx.fillStyle = cvar('--faint')
+        ctx.fillText(layer.caption, cx, h - 6)
+        ctx.strokeStyle = cvar('--line')
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(cx - half, h - 19)
+        ctx.lineTo(cx + half, h - 19)
+        ctx.stroke()
+      })
+      ctx.textAlign = 'left'
+
+      // edges as flat S-curves: they leave and enter their nodes horizontally,
+      // which is what makes a layered graph followable
       GRAPH.edges.forEach(([a, b]) => {
         const pa = pmap.get(a)
         const pb = pmap.get(b)
-        const mid = (a.x + b.x) / 2
-        const active = mid < front
-        const depthAlpha = 0.5 + 0.5 * Math.min(pa.s, pb.s)
         const onPath = hover && (a === hover || b === hover)
+        const active = (a.x + b.x) / 2 < front
+        const bend = (pb.x - pa.x) * 0.42
+
         if (onPath) {
           ctx.strokeStyle = cvar(`--dot-${hover.domain}`)
-          ctx.globalAlpha = 0.95
-          ctx.lineWidth = 1.6
+          ctx.globalAlpha = 1
+          ctx.lineWidth = 1.9
+        } else if (active) {
+          ctx.strokeStyle = cvar('--ink')
+          ctx.globalAlpha = 0.7
+          ctx.lineWidth = 1.3
         } else {
-          ctx.strokeStyle = active ? cvar('--ink') : cvar('--line')
-          ctx.globalAlpha = (active ? 0.75 : 0.55 * depthAlpha) * (hover ? 0.3 : 1)
-          ctx.lineWidth = active ? 1.2 : 1
+          ctx.strokeStyle = cvar('--muted')
+          ctx.globalAlpha = (hover ? 0.1 : 0.36) * (0.72 + 0.28 * Math.min(pa.s, pb.s))
+          ctx.lineWidth = 1
         }
-        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(pa.x, pa.y)
+        ctx.bezierCurveTo(pa.x + bend, pa.y, pb.x - bend, pb.y, pb.x, pb.y)
+        ctx.stroke()
         ctx.globalAlpha = 1
       })
 
-      // flashlight: how strongly the cursor lights a point, 0 outside the beam
-      const beam = Math.min(190, Math.max(110, Math.min(w, h) * 0.3))
+      // flashlight: how strongly the cursor lights a point
+      const beam = Math.min(180, Math.max(110, Math.min(w, h) * 0.34))
       const lit = (p) => {
         if (!s.pointer) return 0
         const d = Math.hypot(p.x - s.pointer.x, p.y - s.pointer.y)
@@ -332,100 +352,82 @@ export default function NetworkFigure({ children }) {
         return t * t
       }
 
-      // nodes, far to near
+      // nodes, far to near, each ringed in paper so edges pass behind them
       projected
         .slice()
         .sort((a, b) => b.p.depth - a.p.depth)
         .forEach(({ n, p }) => {
-          const active = n.x < front
           const g = lit(p)
-          const r = (n.layer === 3 ? 7 : 5.6) * p.s * (1 + 0.3 * g)
+          const focus = !hover || n === hover || neighbors.has(n)
+          const active = n.x < front
+          const r = (n.layer === 3 ? 6.4 : 5.4) * p.s * (1 + 0.26 * g)
+
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, r + 2.6, 0, Math.PI * 2)
+          ctx.fillStyle = cvar('--paper')
+          ctx.globalAlpha = focus ? 1 : 0.6
+          ctx.fill()
+
           ctx.beginPath()
           ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
           ctx.fillStyle = cvar(`--dot-${n.domain}`)
-          const focus = !hover || n === hover || neighbors.has(n)
-          ctx.globalAlpha =
-            Math.min(1, 0.3 + 0.6 * Math.min(p.s, 1) + 0.5 * g) * (focus ? 1 : 0.35)
+          ctx.globalAlpha = Math.min(1, (0.62 + 0.3 * g) * (focus ? 1 : 0.3))
           ctx.fill()
           ctx.globalAlpha = 1
-          if (g > 0.12) {
+
+          if (active || n === hover) {
             ctx.beginPath()
-            ctx.arc(p.x, p.y, r + 4, 0, Math.PI * 2)
-            ctx.strokeStyle = cvar(`--dot-${n.domain}`)
-            ctx.globalAlpha = 0.5 * g
+            ctx.arc(p.x, p.y, r + 3.4, 0, Math.PI * 2)
+            ctx.strokeStyle = cvar('--ink')
             ctx.lineWidth = 1
+            ctx.globalAlpha = n === hover ? 1 : 0.7
             ctx.stroke()
             ctx.globalAlpha = 1
           }
-          if (active) {
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, r + 3, 0, Math.PI * 2)
-            ctx.strokeStyle = cvar('--ink')
-            ctx.lineWidth = 1
-            ctx.stroke()
-          }
         })
 
-      // chips: hover beats everything; during the pass the wavefront lights
-      // nodes up as it reaches them; afterwards the outputs stay labeled
-      const chipped = new Set()
+      // names: the hovered node, whatever the wavefront is passing through, and
+      // the results once it lands. chips are de-collided column by column.
+      const named = new Set()
+      const queue = []
+      const enqueue = (n, p) => { if (!named.has(n)) { named.add(n); queue.push({ n, p }) } }
 
-      if (hover) {
-        const hp = pmap.get(hover)
-        chipped.add(hover)
-        chip(hp.x, hp.y, hover.label, hover.domain)
-      }
-
+      if (hover) enqueue(hover, pmap.get(hover))
       if (s.passStart >= 0 && !s.passDone) {
         projected.forEach(({ n, p }) => {
           const since = front - n.x
-          if (since > 0 && since < 0.55 && !chipped.has(n)) {
-            chipped.add(n)
-            chip(p.x, p.y, n.label, n.domain)
-          }
+          if (since > 0 && since < 0.5) enqueue(n, p)
         })
       }
-
-      if (s.passDone && !s.hover) {
-        let lastY = -Infinity
-        projected
-          .filter(({ n }) => n.layer === 3)
-          .sort((a, b) => a.p.y - b.p.y)
-          .forEach(({ n, p }) => {
-            const y = Math.max(p.y, lastY + 24)
-            lastY = y
-            chipped.add(n)
-            chip(p.x, y, n.label, n.domain)
-          })
+      if (s.passDone && !hover) {
+        projected.filter(({ n }) => n.layer === 3).forEach(({ n, p }) => enqueue(n, p))
       }
 
-      // labels inside the flashlight beam, fading out toward its edge
-      octx.font = '10px "IBM Plex Mono", monospace'
-      octx.textAlign = 'center'
-      octx.fillStyle = cvar('--ink')
-      projected.forEach(({ n, p }) => {
-        if (chipped.has(n)) return
-        const g = lit(p)
-        const alpha = neighbors.has(n) ? 1 : Math.min(1, g * 1.6)
-        if (alpha < 0.06) return
-        const r = (n.layer === 3 ? 7 : 5.6) * p.s
-        const lx = Math.min(Math.max(p.x, 40), w - 40)
-        const ly = p.y + r + 13
-        // a paper backing keeps labels legible where they fall over the abstract
-        const tw = octx.measureText(n.label).width
-        octx.globalAlpha = alpha * 0.88
-        octx.fillStyle = cvar('--paper')
-        octx.fillRect(lx - tw / 2 - 4, ly - 10, tw + 8, 14)
-        octx.globalAlpha = alpha
-        octx.fillStyle = cvar('--ink')
-        octx.fillText(n.label, lx, ly)
+      const columns = new Map()
+      queue.forEach((q) => {
+        if (!columns.has(q.n.layer)) columns.set(q.n.layer, [])
+        columns.get(q.n.layer).push(q)
       })
-      octx.globalAlpha = 1
-      octx.textAlign = 'left'
+      columns.forEach((list) => {
+        list.sort((a, b) => a.p.y - b.p.y)
+        let lastY = -Infinity
+        list.forEach((q) => {
+          q.y = Math.max(q.p.y, lastY + 22)
+          lastY = q.y
+        })
+      })
+      queue.forEach((q) => chip(q.p.x, q.y, q.n.label, q.n.domain))
 
+      projected.forEach(({ n, p }) => {
+        if (named.has(n)) return
+        const alpha = neighbors.has(n) ? 1 : Math.min(1, lit(p) * 1.7)
+        if (alpha < 0.06) return
+        const r = (n.layer === 3 ? 6.4 : 5.4) * p.s
+        label(p.x, p.y + r + 14, n.label, alpha)
+      })
+
+      canvas.style.cursor = hover ? 'pointer' : s.dragging ? 'grabbing' : 'grab'
       s.projected = projected
-
-      canvas.style.cursor = s.hover ? 'pointer' : s.dragging ? 'grabbing' : 'grab'
       raf = requestAnimationFrame(draw)
     }
     raf = requestAnimationFrame(draw)
@@ -448,8 +450,8 @@ export default function NetworkFigure({ children }) {
       const p = pos(e)
       s.pointer = p
       if (s.dragging) {
-        s.yaw += (p.x - s.lastX) * 0.008
-        s.pitch = Math.min(0.9, Math.max(-0.1, s.pitch + (p.y - s.lastY) * 0.006))
+        s.yaw += (p.x - s.lastX) * 0.007
+        s.pitch = Math.min(0.6, Math.max(-0.15, s.pitch + (p.y - s.lastY) * 0.004))
         s.lastX = p.x
         s.lastY = p.y
         s.idleAt = performance.now()
@@ -458,15 +460,12 @@ export default function NetworkFigure({ children }) {
     const up = (e) => {
       s.dragging = false
       s.idleAt = performance.now()
-      // resume the sway from wherever the viewer left the graph
       s.yawCenter = s.yaw
       s.driftT = 0
-      // a press that never turned into a drag is a click: open the node's section
       const p = pos(e)
-      const wasDrag = Math.hypot(p.x - s.pressX, p.y - s.pressY) > 6
-      if (!wasDrag && s.projected) {
+      if (Math.hypot(p.x - s.pressX, p.y - s.pressY) <= 6 && s.projected) {
         let best = null
-        let bestD = 18
+        let bestD = 20
         s.projected.forEach(({ n, p: q }) => {
           const d = Math.hypot(q.x - p.x, q.y - p.y)
           if (d < bestD) { bestD = d; best = n }
@@ -483,19 +482,18 @@ export default function NetworkFigure({ children }) {
     const leave = () => { s.pointer = null }
 
     canvas.addEventListener('pointerdown', down)
-    stage.addEventListener('pointermove', move)
+    canvas.addEventListener('pointermove', move)
     canvas.addEventListener('pointerup', up)
-    stage.addEventListener('pointerleave', leave)
+    canvas.addEventListener('pointerleave', leave)
 
-    // run one pass automatically once the figure scrolls into view
     const io = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && s.passStart < 0) {
-          setTimeout(runPass, 700)
+          setTimeout(runPass, 900)
           io.disconnect()
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0.45 },
     )
     io.observe(canvas)
 
@@ -504,26 +502,22 @@ export default function NetworkFigure({ children }) {
       ro.disconnect()
       io.disconnect()
       canvas.removeEventListener('pointerdown', down)
-      stage.removeEventListener('pointermove', move)
+      canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', up)
-      stage.removeEventListener('pointerleave', leave)
+      canvas.removeEventListener('pointerleave', leave)
     }
   }, [])
 
   return (
     <figure className="netfig" ref={wrapRef}>
-      <div className="netfig-stage" ref={stageRef}>
-        <canvas
-          className="netfig-field"
-          ref={canvasRef}
-          aria-label="interactive neural network of skills and shipped results"
-        />
-        <div className="netfig-copy">{children}</div>
-        <canvas className="netfig-overlay" ref={overlayRef} aria-hidden="true" />
-      </div>
+      <canvas
+        ref={canvasRef}
+        aria-label="interactive network of the signals, models, practice and results in Kanav's work"
+      />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. sweep the cursor to read the nodes, drag to rotate, click to visit a section.
+          fig. 01. a career as a forward pass. hover a node to trace what feeds it
+          and what it produced; drag to turn the figure, click to jump to a section.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>
