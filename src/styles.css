@@ -1,6 +1,7 @@
 /* ---------- tokens ---------- */
 :root {
   --paper: #fbfaf7;
+  --paper-rgb: 251, 250, 247;
   --ink: #181818;
   --muted: #6e6e66;
   --faint: #9a9a90;
@@ -30,6 +31,7 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
   --paper: #141410;
+  --paper-rgb: 20, 20, 16;
   --ink: #e9e7dc;
   --muted: #98968a;
   --faint: #6c6a5f;
@@ -126,13 +128,7 @@ a:focus-visible, button:focus-visible {
 .nav-resume { color: var(--muted); }
 
 /* ---------- hero ---------- */
-.hero {
-  padding: clamp(44px, 8vh, 96px) 0 clamp(18px, 3vh, 34px);
-}
-.hero-copy { max-width: 72ch; }
-
-/* fig. 01 gets the full width of the page, like a plate in a paper */
-.plate { padding-bottom: clamp(36px, 6vh, 76px); }
+.hero { padding: clamp(26px, 5vh, 60px) 0 clamp(30px, 5vh, 64px); }
 .eyebrow {
   font-size: 11px;
   letter-spacing: 0.18em;
@@ -153,10 +149,47 @@ a:focus-visible, button:focus-visible {
 
 /* ---------- network figure ---------- */
 .netfig { width: 100%; min-width: 0; }
-.netfig canvas {
+
+/* the graph rotates through the whole hero: the field lies behind the
+   abstract, the overlay paints hovered labels on top of it */
+.netfig-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(520px, 50vw, 700px);
+}
+.netfig-field,
+.netfig-overlay {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   display: block;
+}
+.netfig-field {
+  z-index: 0;
   touch-action: none;
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.46) 34%, #000 62%);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.46) 34%, #000 62%);
+}
+.netfig-overlay { z-index: 2; pointer-events: none; }
+.netfig-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 52ch;
+  padding: 6px 0 54px; /* clears the layer headers along the base */
+}
+.netfig-copy::before {
+  content: '';
+  position: absolute;
+  inset: -30px -110px -30px -30px;
+  z-index: -1;
+  background: radial-gradient(
+    104% 88% at 18% 50%,
+    rgba(var(--paper-rgb), 0.88) 34%,
+    rgba(var(--paper-rgb), 0.62) 62%,
+    rgba(var(--paper-rgb), 0) 100%
+  );
 }
 .netfig figcaption {
   margin-top: 16px;
@@ -356,7 +389,20 @@ a:focus-visible, button:focus-visible {
 
 /* ---------- responsive ---------- */
 @media (max-width: 920px) {
-  .hero { padding-top: 36px; }
+  .netfig-stage { align-items: flex-start; min-height: clamp(820px, 215vw, 1000px); }
+  .netfig-copy { max-width: none; }
+  .netfig-copy::before {
+    inset: -18px -18px -26px -18px;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--paper-rgb), 0.97) 62%,
+      rgba(var(--paper-rgb), 0) 100%
+    );
+  }
+  .netfig-field {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 26%, #000 52%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 26%, #000 52%);
+  }
   .skills, .projects { grid-template-columns: 1fr 1fr; }
   .disc { grid-template-columns: 1fr; }
 }

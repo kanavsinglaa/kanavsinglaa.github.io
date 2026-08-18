@@ -140,8 +140,10 @@ function buildGraph() {
 const GRAPH = buildGraph()
 const PASS_MS = 5200
 
-export default function NetworkFigure() {
+export default function NetworkFigure({ children }) {
   const canvasRef = useRef(null)
+  const overlayRef = useRef(null)
+  const stageRef = useRef(null)
   const wrapRef = useRef(null)
   const stateRef = useRef({
     yaw: -0.32,
@@ -173,8 +175,11 @@ export default function NetworkFigure() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const wrap = wrapRef.current
+    const overlay = overlayRef.current
+    const stage = stageRef.current
     const ctx = canvas.getContext('2d')
+    // the field sits behind the abstract; the overlay paints labels on top of it
+    const octx = overlay.getContext('2d')
     const s = stateRef.current
     // live computed style: reads reflect the active theme every frame
     const rootStyle = getComputedStyle(document.documentElement)
@@ -187,21 +192,20 @@ export default function NetworkFigure() {
     let raf = 0
 
     const resize = () => {
-      const rect = wrap.getBoundingClientRect()
+      const rect = stage.getBoundingClientRect()
       w = rect.width
-      // narrow screens get a taller, more portrait plate so the lanes breathe
-      h = w < 620
-        ? Math.max(430, Math.min(560, w * 1.35))
-        : Math.max(380, Math.min(620, w * 0.46))
+      h = rect.height
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
-      canvas.style.height = `${h}px`
+      overlay.width = w * dpr
+      overlay.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      octx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
     const ro = new ResizeObserver(resize)
-    ro.observe(wrap)
+    ro.observe(stage)
 
     const project = (p) => {
       const cy = Math.cos(s.yaw)
@@ -214,10 +218,10 @@ export default function NetworkFigure() {
       zr = p.y * sp + zr * cp
       const f = 4.2
       const scale = f / (f + zr)
-      const unitX = w / (w < 620 ? 4.4 : 4.7)
+      const unitX = w / (w < 620 ? 4.4 : 5)
       const unitY = h / 2.85
       return {
-        x: w / 2 + xr * scale * unitX,
+        x: w * (w < 920 ? 0.5 : 0.54) + xr * scale * unitX,
         y: h / 2 - yr * scale * unitY,
         s: scale,
         depth: zr,
@@ -225,19 +229,20 @@ export default function NetworkFigure() {
     }
 
     const chip = (x, y, text, domain) => {
-      ctx.font = '11px "IBM Plex Mono", monospace'
-      const tw = ctx.measureText(text).width
+      octx.font = '11px "IBM Plex Mono", monospace'
+      const tw = octx.measureText(text).width
       const pad = 5
       const bx = Math.min(Math.max(x + 10, 4), w - tw - pad * 2 - 4)
       const by = Math.min(Math.max(y - 26, 4), h - 22)
-      ctx.fillStyle = cvar(`--hl-${domain}`)
-      ctx.fillRect(bx, by, tw + pad * 2, 18)
-      ctx.fillStyle = cvar('--ink')
-      ctx.fillText(text, bx + pad, by + 13)
+      octx.fillStyle = cvar(`--hl-${domain}`)
+      octx.fillRect(bx, by, tw + pad * 2, 18)
+      octx.fillStyle = cvar('--ink')
+      octx.fillText(text, bx + pad, by + 13)
     }
 
     const draw = (now) => {
       ctx.clearRect(0, 0, w, h)
+      octx.clearRect(0, 0, w, h)
 
       // idle motion sways around the last framing instead of spinning past it,
       // so the layers always read left to right
@@ -248,22 +253,22 @@ export default function NetworkFigure() {
 
       // layer headers sit along the base of the plate and track the rotation,
       // so the four stages stay named without a grid cluttering the field
-      ctx.font = '10px "IBM Plex Mono", monospace'
-      ctx.textAlign = 'center'
+      octx.font = '10px "IBM Plex Mono", monospace'
+      octx.textAlign = 'center'
       LAYERS.forEach((layer) => {
         const lp = project({ x: layer.x, y: 0, z: 0 })
-        const half = ctx.measureText(layer.caption).width / 2 + 6
+        const half = octx.measureText(layer.caption).width / 2 + 6
         const cx = Math.min(Math.max(lp.x, half), w - half)
-        ctx.fillStyle = cvar('--faint')
-        ctx.fillText(layer.caption, cx, h - 6)
-        ctx.strokeStyle = cvar('--line')
-        ctx.lineWidth = 1
-        ctx.beginPath()
-        ctx.moveTo(cx - half + 6, h - 20)
-        ctx.lineTo(cx + half - 6, h - 20)
-        ctx.stroke()
+        octx.fillStyle = cvar('--faint')
+        octx.fillText(layer.caption, cx, h - 6)
+        octx.strokeStyle = cvar('--line')
+        octx.lineWidth = 1
+        octx.beginPath()
+        octx.moveTo(cx - half + 6, h - 20)
+        octx.lineTo(cx + half - 6, h - 20)
+        octx.stroke()
       })
-      ctx.textAlign = 'left'
+      octx.textAlign = 'left'
 
       // forward-pass wavefront in graph-x space
       let front = -Infinity
@@ -395,20 +400,28 @@ export default function NetworkFigure() {
       }
 
       // labels inside the flashlight beam, fading out toward its edge
-      ctx.font = '10px "IBM Plex Mono", monospace'
-      ctx.textAlign = 'center'
-      ctx.fillStyle = cvar('--ink')
+      octx.font = '10px "IBM Plex Mono", monospace'
+      octx.textAlign = 'center'
+      octx.fillStyle = cvar('--ink')
       projected.forEach(({ n, p }) => {
         if (chipped.has(n)) return
         const g = lit(p)
         const alpha = neighbors.has(n) ? 1 : Math.min(1, g * 1.6)
         if (alpha < 0.06) return
         const r = (n.layer === 3 ? 7 : 5.6) * p.s
-        ctx.globalAlpha = alpha
-        ctx.fillText(n.label, Math.min(Math.max(p.x, 40), w - 40), p.y + r + 13)
+        const lx = Math.min(Math.max(p.x, 40), w - 40)
+        const ly = p.y + r + 13
+        // a paper backing keeps labels legible where they fall over the abstract
+        const tw = octx.measureText(n.label).width
+        octx.globalAlpha = alpha * 0.88
+        octx.fillStyle = cvar('--paper')
+        octx.fillRect(lx - tw / 2 - 4, ly - 10, tw + 8, 14)
+        octx.globalAlpha = alpha
+        octx.fillStyle = cvar('--ink')
+        octx.fillText(n.label, lx, ly)
       })
-      ctx.globalAlpha = 1
-      ctx.textAlign = 'left'
+      octx.globalAlpha = 1
+      octx.textAlign = 'left'
 
       s.projected = projected
 
@@ -470,9 +483,9 @@ export default function NetworkFigure() {
     const leave = () => { s.pointer = null }
 
     canvas.addEventListener('pointerdown', down)
-    canvas.addEventListener('pointermove', move)
+    stage.addEventListener('pointermove', move)
     canvas.addEventListener('pointerup', up)
-    canvas.addEventListener('pointerleave', leave)
+    stage.addEventListener('pointerleave', leave)
 
     // run one pass automatically once the figure scrolls into view
     const io = new IntersectionObserver(
@@ -491,15 +504,23 @@ export default function NetworkFigure() {
       ro.disconnect()
       io.disconnect()
       canvas.removeEventListener('pointerdown', down)
-      canvas.removeEventListener('pointermove', move)
+      stage.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', up)
-      canvas.removeEventListener('pointerleave', leave)
+      stage.removeEventListener('pointerleave', leave)
     }
   }, [])
 
   return (
     <figure className="netfig" ref={wrapRef}>
-      <canvas ref={canvasRef} aria-label="interactive neural network of skills and shipped results" />
+      <div className="netfig-stage" ref={stageRef}>
+        <canvas
+          className="netfig-field"
+          ref={canvasRef}
+          aria-label="interactive neural network of skills and shipped results"
+        />
+        <div className="netfig-copy">{children}</div>
+        <canvas className="netfig-overlay" ref={overlayRef} aria-hidden="true" />
+      </div>
       <figcaption>
         <span className="netfig-cap">
           fig. 01. a career as a forward pass: signals in, skills through the hidden layers, results out. sweep the cursor to read the nodes, drag to rotate, click to visit a section.

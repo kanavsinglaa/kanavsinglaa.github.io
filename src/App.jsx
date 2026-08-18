@@ -99,7 +99,7 @@ export default function App() {
 
       <main>
         <section className="hero">
-          <div className="hero-copy">
+          <NetworkFigure>
             <p className="eyebrow">abstract</p>
             <p className="intro">
               {intro.map((seg, i) => <IntroSeg key={i} seg={seg} />)}
@@ -112,11 +112,7 @@ export default function App() {
               <a href={contact.github} target="_blank" rel="noreferrer">github</a>
               <a href={contact.linkedin} target="_blank" rel="noreferrer">linkedin</a>
             </p>
-          </div>
-        </section>
-
-        <section className="plate" aria-label="figure 1">
-          <NetworkFigure />
+          </NetworkFigure>
         </section>
 
         <section id="work" className="sec">
