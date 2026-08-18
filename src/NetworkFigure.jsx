@@ -157,7 +157,7 @@ function buildGraph() {
 }
 
 const GRAPH = buildGraph()
-const PASS_MS = 5200
+const PASS_MS = 7000
 
 export default function NetworkFigure() {
   const canvasRef = useRef(null)
