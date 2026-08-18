@@ -1,34 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
 
-// fig. 01: a career drawn as a layered network.
-// Four columns read left to right — the signals Kanav works from, the models he
-// builds with, the practice that makes them trustworthy, and what shipped.
+// fig. 01: a career drawn as a feed-forward network.
+// Input layer: the raw signals Kanav's systems ingest. First hidden layer: the
+// models those signals train. Second hidden layer: the practice and tooling that
+// make a model shippable. Output layer: what actually shipped.
 // Nodes sit in fixed horizontal lanes by domain, so a path through one domain
 // runs straight across and every edge below is a real claim about the work.
 
 const DOMAIN_LANE = { voice: 1.02, models: 0.3, product: -0.42, autonomy: -1.04 }
-const Y_MID = 0.1 // midpoint of the occupied lane range, keeps the plate balanced
+const Y_MID = 0.04 // midpoint of the occupied lane range, keeps the plate balanced
 const LANE_STEP = 0.21
 
 const LAYERS = [
   {
     x: -1.62,
-    caption: 'signals in',
+    caption: 'input · signals',
     nodes: [
       ['live call audio', 'voice', '#xp-sadie'],
       ['production call logs', 'voice', '#xp-sadie'],
       ['m&a documents', 'models', '#xp-valsoft'],
-      ['aerial & camera imagery', 'models', '#projects'],
+      ['satellite & camera imagery', 'models', '#projects'],
       ['hotel demand & rates', 'product', '#xp-ampliphi'],
+      ['market & event signals', 'product', '#xp-ampliphi'],
       ['driving scenes', 'autonomy', '#xp-huawei'],
     ],
   },
   {
     x: -0.54,
-    caption: 'models',
+    caption: 'hidden · models',
     nodes: [
       ['streaming stt / tts', 'voice', '#skills'],
-      ['int8 onnx classifier', 'voice', '#xp-sadie'],
+      ['turn-taking classifier', 'voice', '#xp-sadie'],
       ['lora fine-tunes', 'models', '#xp-sadie'],
       ['llm extraction & rag', 'models', '#xp-valsoft'],
       ['detection & vision', 'models', '#projects'],
@@ -38,19 +40,21 @@ const LAYERS = [
   },
   {
     x: 0.54,
-    caption: 'practice',
+    caption: 'hidden · practice',
     nodes: [
       ['latency & ttft profiling', 'voice', '#contributions'],
+      ['int8 quantization', 'voice', '#skills'],
       ['gold eval sets', 'models', '#skills'],
       ['dataset curation', 'models', '#skills'],
       ['production a/b tests', 'product', '#skills'],
       ['inference cost modeling', 'product', '#contributions'],
       ['distributed gpu training', 'autonomy', '#xp-huawei'],
+      ['closed-loop simulation', 'autonomy', '#xp-huawei'],
     ],
   },
   {
     x: 1.62,
-    caption: 'results out',
+    caption: 'output · results',
     nodes: [
       ['22 ms first sentence', 'voice', '#xp-sadie'],
       ['1,500+ venues live', 'voice', '#xp-sadie'],
@@ -63,47 +67,53 @@ const LAYERS = [
   },
 ]
 
-// Each pair is a claim: this signal fed that model, this model demanded that
-// practice, this practice produced that result.
+// Every edge is a claim: this signal trained that model, that model demanded
+// this practice, this practice produced that result.
 const EDGES = [
+  // signals → models
   ['live call audio', 'streaming stt / tts'],
-  ['live call audio', 'int8 onnx classifier'],
+  ['live call audio', 'turn-taking classifier'],
   ['production call logs', 'lora fine-tunes'],
-  ['production call logs', 'int8 onnx classifier'],
-  ['hotel demand & rates', 'demand forecasting'],
-  ['hotel demand & rates', 'llm extraction & rag'],
+  ['production call logs', 'turn-taking classifier'],
   ['m&a documents', 'llm extraction & rag'],
+  ['satellite & camera imagery', 'detection & vision'],
+  ['hotel demand & rates', 'demand forecasting'],
+  ['market & event signals', 'llm extraction & rag'],
+  ['market & event signals', 'demand forecasting'],
   ['driving scenes', 'learned planning'],
   ['driving scenes', 'detection & vision'],
-  ['aerial & camera imagery', 'detection & vision'],
 
+  // models → practice
   ['streaming stt / tts', 'latency & ttft profiling'],
   ['streaming stt / tts', 'gold eval sets'],
-  ['int8 onnx classifier', 'latency & ttft profiling'],
-  ['int8 onnx classifier', 'inference cost modeling'],
+  ['turn-taking classifier', 'int8 quantization'],
+  ['turn-taking classifier', 'production a/b tests'],
   ['lora fine-tunes', 'dataset curation'],
   ['lora fine-tunes', 'gold eval sets'],
   ['llm extraction & rag', 'gold eval sets'],
   ['llm extraction & rag', 'inference cost modeling'],
+  ['detection & vision', 'dataset curation'],
+  ['detection & vision', 'distributed gpu training'],
   ['demand forecasting', 'production a/b tests'],
   ['demand forecasting', 'gold eval sets'],
   ['learned planning', 'distributed gpu training'],
-  ['learned planning', 'gold eval sets'],
-  ['detection & vision', 'distributed gpu training'],
-  ['detection & vision', 'dataset curation'],
+  ['learned planning', 'closed-loop simulation'],
 
+  // practice → results
   ['latency & ttft profiling', '22 ms first sentence'],
   ['latency & ttft profiling', '1,500+ venues live'],
+  ['int8 quantization', '22 ms first sentence'],
+  ['int8 quantization', '−55% llm spend'],
   ['inference cost modeling', '−55% llm spend'],
-  ['dataset curation', '−55% llm spend'],
-  ['dataset curation', '94% recall @ incheon'],
   ['gold eval sets', '1,500+ venues live'],
   ['gold eval sets', '$500k arr'],
   ['gold eval sets', 'self-driving planner'],
+  ['dataset curation', '94% recall @ incheon'],
   ['production a/b tests', '$500k arr'],
   ['production a/b tests', '150+ hotels priced'],
-  ['distributed gpu training', 'self-driving planner'],
   ['distributed gpu training', '94% recall @ incheon'],
+  ['distributed gpu training', 'self-driving planner'],
+  ['closed-loop simulation', 'self-driving planner'],
 ]
 
 function buildGraph() {
@@ -219,7 +229,7 @@ export default function NetworkFigure() {
       const f = 6.5
       const scale = f / (f + zr)
       const unitX = w / 3.9
-      const unitY = (h - 58) / 2.55
+      const unitY = (h - 58) / 2.67
       return {
         x: w / 2 + xr * scale * unitX,
         y: (h - 34) / 2 - yr * scale * unitY,

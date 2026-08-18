@@ -27,7 +27,7 @@ export const intro = [
   { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
   { t: ' for self-driving cars at ' },
-  { t: 'huawei’s noah’s ark lab', url: 'https://www.noahlab.com.hk/en' },
+  { t: 'huawei’s noah’s ark lab', url: 'https://github.com/huawei-noah' },
   { t: '. i like hard problems and instruments that feel alive.' },
 ]
 
@@ -106,7 +106,7 @@ export const experience = [
     id: 'huawei',
     role: 'ai research engineer',
     org: 'Noah’s Ark Lab, Huawei',
-    url: 'https://www.noahlab.com.hk/en',
+    url: 'https://github.com/huawei-noah',
     sub: null,
     when: 'jun 2021 → sep 2022',
     where: 'markham',
