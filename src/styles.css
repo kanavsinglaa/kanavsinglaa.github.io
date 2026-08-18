@@ -188,6 +188,27 @@ a:focus-visible, button:focus-visible {
   color: var(--ink);
 }
 .netfig-btn:hover { background: var(--ink); color: var(--paper); }
+.netfig-zoom { display: inline-flex; align-items: center; gap: 6px; }
+.netfig-step {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1;
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+}
+.netfig-step:hover { border-color: var(--ink); color: var(--ink); }
+.netfig-step-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.netfig-reset { font-size: 11px; padding: 3px 8px; border-color: var(--line); color: var(--muted); }
+.netfig-reset:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .netfig-ms { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .netfig-ms s { color: var(--faint); margin-left: 6px; }
 

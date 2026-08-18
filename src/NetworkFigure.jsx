@@ -162,6 +162,7 @@ const PASS_MS = 5200
 export default function NetworkFigure() {
   const canvasRef = useRef(null)
   const wrapRef = useRef(null)
+  const zoomApi = useRef(null)
   const stateRef = useRef({
     yaw: -0.16,
     yawCenter: -0.16,
@@ -180,8 +181,12 @@ export default function NetworkFigure() {
     passStart: -1,
     passDone: false,
     reduced: false,
+    zoom: 1, // vertical spread: 1 fits the plate, higher gives the lanes more room
+    offsets: new Map(), // node -> {dx, dy} once a viewer pulls it out of place
+    pulling: null,
   })
   const [ms, setMs] = useState(null)
+  const [touched, setTouched] = useState(false)
 
   const runPass = () => {
     const s = stateRef.current
@@ -206,7 +211,8 @@ export default function NetworkFigure() {
     const resize = () => {
       const rect = wrap.getBoundingClientRect()
       w = rect.width
-      h = w < 560 ? Math.max(420, w * 1.16) : Math.max(430, Math.min(540, w * 0.86))
+      const base = w < 560 ? Math.max(420, w * 1.16) : Math.max(430, Math.min(540, w * 0.86))
+      h = Math.round(base * s.zoom)
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
@@ -235,7 +241,36 @@ export default function NetworkFigure() {
         y: (h - 34) / 2 - yr * scale * unitY,
         s: scale,
         depth: zr,
+        ux: unitX,
+        uy: unitY,
       }
+    }
+
+    // a node's position plus however far it has been pulled from its lane
+    const at = (n) => {
+      const off = s.offsets.get(n)
+      return off ? { x: n.x + off.dx, y: n.y + off.dy, z: n.z } : n
+    }
+
+    const setZoom = (next) => {
+      const z = Math.min(1.7, Math.max(1, Math.round(next * 100) / 100))
+      if (z === s.zoom) return
+      s.zoom = z
+      resize() // the plate grows, so the lanes gain room without leaving the frame
+      setTouched(true)
+    }
+    zoomApi.current = {
+      by: (f) => setZoom(s.zoom * f),
+      reset: () => {
+        s.zoom = 1
+        resize()
+        s.offsets.clear()
+        s.yaw = -0.16
+        s.yawCenter = -0.16
+        s.pitch = 0.16
+        s.driftT = 0
+        setTouched(false)
+      },
     }
 
     const label = (x, y, text, alpha) => {
@@ -273,7 +308,7 @@ export default function NetworkFigure() {
         s.yaw = s.yawCenter + Math.sin(s.driftT) * 0.12
       }
 
-      const projected = GRAPH.nodes.map((n) => ({ n, p: project(n) }))
+      const projected = GRAPH.nodes.map((n) => ({ n, p: project(at(n)) }))
       const pmap = new Map(projected.map((o) => [o.n, o.p]))
 
       // hover first: it decides how the edges are drawn
@@ -329,7 +364,7 @@ export default function NetworkFigure() {
         const pa = pmap.get(a)
         const pb = pmap.get(b)
         const onPath = hover && (a === hover || b === hover)
-        const active = (a.x + b.x) / 2 < front
+        const active = (a.x + b.x) / 2 < front // lane x: the pass follows topology
         const bend = (pb.x - pa.x) * 0.42
 
         if (onPath) {
@@ -436,7 +471,7 @@ export default function NetworkFigure() {
         label(p.x, p.y + r + 14, n.label, alpha)
       })
 
-      canvas.style.cursor = hover ? 'pointer' : s.dragging ? 'grabbing' : 'grab'
+      canvas.style.cursor = s.pulling || s.dragging ? 'grabbing' : 'grab'
       s.projected = projected
       raf = requestAnimationFrame(draw)
     }
@@ -446,6 +481,16 @@ export default function NetworkFigure() {
       const r = canvas.getBoundingClientRect()
       return { x: e.clientX - r.left, y: e.clientY - r.top }
     }
+    const nodeAt = (p) => {
+      if (!s.projected) return null
+      let best = null
+      let bestD = 20
+      s.projected.forEach(({ n, p: q }) => {
+        const d = Math.hypot(q.x - p.x, q.y - p.y)
+        if (d < bestD) { bestD = d; best = { n, p: q } }
+      })
+      return best
+    }
     const down = (e) => {
       s.dragging = true
       const p = pos(e)
@@ -454,14 +499,31 @@ export default function NetworkFigure() {
       s.pressX = p.x
       s.pressY = p.y
       s.pointer = p
+      const grabbed = nodeAt(p)
+      s.pulling = grabbed ? grabbed.n : null
       canvas.setPointerCapture(e.pointerId)
     }
     const move = (e) => {
       const p = pos(e)
       s.pointer = p
       if (s.dragging) {
-        s.yaw += (p.x - s.lastX) * 0.007
-        s.pitch = Math.min(0.6, Math.max(-0.15, s.pitch + (p.y - s.lastY) * 0.004))
+        const dx = p.x - s.lastX
+        const dy = p.y - s.lastY
+        if (s.pulling) {
+          // drag a node out of its lane; its edges follow
+          const q = s.projected && s.projected.find((o) => o.n === s.pulling)
+          const sc = q ? q.p.s : 1
+          const ux = (q ? q.p.ux : w / 3.9) * sc
+          const uy = (q ? q.p.uy : (h - 58) / 2.67) * sc
+          const off = s.offsets.get(s.pulling) || { dx: 0, dy: 0 }
+          off.dx += dx / ux
+          off.dy -= dy / uy
+          s.offsets.set(s.pulling, off)
+          setTouched(true)
+        } else {
+          s.yaw += dx * 0.007
+          s.pitch = Math.min(0.6, Math.max(-0.15, s.pitch + dy * 0.004))
+        }
         s.lastX = p.x
         s.lastY = p.y
         s.idleAt = performance.now()
@@ -469,6 +531,7 @@ export default function NetworkFigure() {
     }
     const up = (e) => {
       s.dragging = false
+      s.pulling = null
       s.idleAt = performance.now()
       s.yawCenter = s.yaw
       s.driftT = 0
@@ -491,6 +554,13 @@ export default function NetworkFigure() {
     }
     const leave = () => { s.pointer = null }
 
+    const wheel = (e) => {
+      if (!(e.ctrlKey || e.metaKey)) return // plain scroll still scrolls the page
+      e.preventDefault()
+      setZoom(s.zoom * Math.exp(-e.deltaY * 0.0022))
+    }
+
+    canvas.addEventListener('wheel', wheel, { passive: false })
     canvas.addEventListener('pointerdown', down)
     canvas.addEventListener('pointermove', move)
     canvas.addEventListener('pointerup', up)
@@ -511,6 +581,7 @@ export default function NetworkFigure() {
       cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
+      canvas.removeEventListener('wheel', wheel)
       canvas.removeEventListener('pointerdown', down)
       canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', up)
@@ -526,13 +597,42 @@ export default function NetworkFigure() {
       />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01. a career as a forward pass. hover a node to trace what feeds it
-          and what it produced; drag to turn the figure, click to jump to a section.
+          fig. 01. a career as a forward pass. hover a node to trace what feeds it and
+          what it produced, drag a node to pull it out of its lane, expand to spread the
+          whole lattice, click to jump to a section.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>
             ▷ run forward pass
           </button>
+          <span className="netfig-zoom">
+            <button
+              type="button"
+              className="netfig-step"
+              onClick={() => zoomApi.current && zoomApi.current.by(1 / 1.22)}
+              aria-label="contract the figure"
+            >
+              −
+            </button>
+            <span className="netfig-step-label">expand</span>
+            <button
+              type="button"
+              className="netfig-step"
+              onClick={() => zoomApi.current && zoomApi.current.by(1.22)}
+              aria-label="expand the figure"
+            >
+              +
+            </button>
+          </span>
+          {touched && (
+            <button
+              type="button"
+              className="netfig-btn netfig-reset"
+              onClick={() => zoomApi.current && zoomApi.current.reset()}
+            >
+              ⟲ reset layout
+            </button>
+          )}
           <span className="netfig-ms" aria-live="polite">
             {ms === null ? 'ttft: idle' : `ttft: ${ms} ms`}
             {ms === 22 && <s> 218 ms</s>}
