@@ -16,11 +16,11 @@ export const contact = {
 }
 
 export const intro = [
-  { t: 'i shave ' },
-  { t: 'the silence before the first word', hl: 'voice' },
-  { t: '. at ' },
+  { t: 'at ' },
   { t: 'sadie ai', url: 'https://www.heysadie.ai/', icon: '/logos/sadie.png' },
-  { t: ' i work on models & inference for voice: trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
+  { t: ' i work on models & inference for voice: shaving ' },
+  { t: 'the silence before the first word', hl: 'voice' },
+  { t: ', trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
   { t: 'ampliphi', hl: 'product', url: 'https://www.getampliphi.com/about-us', icon: '/logos/ampliphi.png' },
   { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
