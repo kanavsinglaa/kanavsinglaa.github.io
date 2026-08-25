@@ -242,7 +242,7 @@ export default function App() {
 
         <section id="work" className="sec">
           <SectionHead title="deployment history"
-            note="every model here ran in production, in front of paying customers."
+            note="intelligence is abundant and cheap now. leveraging it into a harness people love using is not. every harness here ran in production, in front of paying customers."
           />
           <div className="xp-list">
             {experience.map((xp) => (
@@ -283,7 +283,7 @@ export default function App() {
 
         <section id="research" className="sec">
           <SectionHead title="research, put into production"
-            note="anyone can call a model now. the work is the harness around it: latency you never notice, evals you can trust, and an interface people actually enjoy."
+            note="the art is knowing which research survives production, then engineering it until it does."
           />
           <div className="xp-list">
             {research.map((r, i) => (
