@@ -151,6 +151,21 @@ a:focus-visible, button:focus-visible {
 .hero-links { margin-top: 8px; display: flex; gap: 16px; font-size: 13px; flex-wrap: wrap; }
 .hero-links a { text-underline-offset: 3px; }
 .intro-link { color: inherit; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+/* an emoji that leads a link: part of the hit area, and it pulls away on hover */
+.link-emoji {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 1.08em;
+  line-height: 1;
+  font-style: normal;
+  transition: transform 0.2s ease;
+}
+.intro-link:hover .link-emoji,
+.intro-link:focus-visible .link-emoji { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .link-emoji { transition: none; }
+  .intro-link:hover .link-emoji { transform: none; }
+}
 .intro-link:hover { text-decoration-thickness: 2px; }
 .intro-link .hl { text-decoration: inherit; }
 

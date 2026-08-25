@@ -21,6 +21,9 @@ function IntroSeg({ seg }) {
   if (seg.url) {
     return (
       <a className="intro-link" href={seg.url} target="_blank" rel="noreferrer">
+        {seg.emoji && (
+          <span className="link-emoji" aria-hidden="true">{seg.emoji}</span>
+        )}
         {inner}
       </a>
     )

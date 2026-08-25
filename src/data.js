@@ -148,7 +148,11 @@ export const research = [
     orgSegs: [
       { t: 'Toronto Intelligent Systems Lab', url: 'https://tisl.cs.toronto.edu/' },
       { t: ' × ' },
-      { t: 'Toyota Research Institute', url: 'https://www.tri.global/' },
+      {
+        t: 'Toyota Research Institute',
+        url: 'https://www.tri.global/our-work/human-interactive-driving',
+        emoji: '🏎️',
+      },
     ],
     when: '2022 → 2023',
     domain: 'autonomy',
