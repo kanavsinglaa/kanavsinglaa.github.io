@@ -11,8 +11,9 @@
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <script>
       try {
+        document.documentElement.classList.add('has-reveal') // js is on: allow reveals
         const q = new URLSearchParams(location.search).get('theme')
-        const t = q || localStorage.getItem('theme')
+        const t = q || localStorage.getItem('theme') || 'dark' // dark unless asked otherwise
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
       } catch (e) {}
     </script>

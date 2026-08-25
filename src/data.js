@@ -16,19 +16,45 @@ export const contact = {
 }
 
 export const intro = [
-  { t: 'i bridge ' },
-  { t: 'ai and creativity', hl: 'models' },
-  { t: '. at ' },
-  { t: 'sadie ai', url: 'https://www.heysadie.ai/' },
-  { t: ' i work on models & inference for voice: shaving ' },
+  { t: 'i shave ' },
   { t: 'the silence before the first word', hl: 'voice' },
-  { t: ', trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
-  { t: 'ampliphi', hl: 'product', url: 'https://www.getampliphi.com/about-us' },
+  { t: '. at ' },
+  { t: 'sadie ai', url: 'https://www.heysadie.ai/', icon: '/logos/sadie.png' },
+  { t: ' i work on models & inference for voice: trimming the token bill behind every turn, teaching small models to do big-model work, and cleaning data until the evals mean something. i co-founded ' },
+  { t: 'ampliphi', hl: 'product', url: 'https://www.getampliphi.com/about-us', icon: '/logos/ampliphi.png' },
   { t: ' and grew it from zero to half a million arr in a year. earlier i trained ' },
   { t: 'planning models', hl: 'autonomy' },
   { t: ' for self-driving cars at ' },
-  { t: 'huawei’s noah’s ark lab', url: 'https://github.com/huawei-noah' },
-  { t: '. i like hard problems and instruments that feel alive.' },
+  { t: 'huawei’s noah’s ark lab', url: 'https://auto.huawei.com/en/ads', icon: '/logos/huawei.png' },
+  { t: '. the thread through all of it is ' },
+  { t: 'ai and creativity', hl: 'models' },
+  { t: ': i like hard problems and instruments that feel alive.' },
+]
+
+export const updated = 'august 2026'
+
+/* A paper closes on future work. These are open, not settled. */
+export const openQuestions = [
+  {
+    domain: 'voice',
+    q: 'where does the expressivity and latency frontier in speech synthesis actually sit, and is it a modelling limit or an engineering one?',
+  },
+  {
+    domain: 'models',
+    q: 'do evaluation harnesses transfer across verticals, or does every vertical earn its own gold set from scratch?',
+  },
+  {
+    domain: 'autonomy',
+    q: 'what can closed-loop evaluation for language agents borrow from autonomous driving simulation? i have built both and they still feel further apart than they should.',
+  },
+  {
+    domain: 'product',
+    q: 'how small can a model get before turn-level decisions stop being reliable, and what is the right test for that boundary?',
+  },
+  {
+    domain: 'models',
+    q: 'which parts of an agent belong in a prompt at all, given that emergent prompt behaviour cannot be tested and a classifier can?',
+  },
 ]
 
 export const discussion = [
@@ -52,6 +78,7 @@ export const discussion = [
 export const experience = [
   {
     id: 'sadie',
+    icon: '/logos/sadie.png',
     role: 'models & inference',
     org: 'Sadie AI',
     url: 'https://www.heysadie.ai/',
@@ -71,6 +98,7 @@ export const experience = [
   },
   {
     id: 'ampliphi',
+    icon: '/logos/ampliphi.png',
     role: 'technical co-founder & ai lead',
     org: 'Ampliphi',
     url: 'https://www.getampliphi.com/about-us',
@@ -88,9 +116,10 @@ export const experience = [
   },
   {
     id: 'valsoft',
+    icon: '/logos/valsoft.png',
     role: 'ai solutions lead',
     org: 'Valsoft / Aspire Software',
-    url: 'https://www.aspiresoftware.com/ai-labs/',
+    url: 'https://www.valsoftcorp.com/ai-labs/ai-ventures',
     sub: 'ai founding engineer (2023) · ai solutions architect (2024) · ai solutions lead (2025)',
     when: 'jun 2023 → apr 2026',
     where: 'toronto',
@@ -104,19 +133,19 @@ export const experience = [
   },
   {
     id: 'huawei',
+    icon: '/logos/huawei.png',
     role: 'ai research engineer',
     org: 'Noah’s Ark Lab, Huawei',
-    url: 'https://github.com/huawei-noah',
-    sub: null,
+    url: 'https://auto.huawei.com/en/ads',
+    sub: '15-month PEY research internship, alongside a team of senior researchers',
     when: 'jun 2021 → sep 2022',
     where: 'markham',
     domain: 'autonomy',
     points: [
-      'shipped a learning-based planning stack for Huawei’s self-driving system.',
-      'trained large planning models end to end: multimodal data pipelines, distributed GPU runs, and closed-loop evaluation.',
+      'contributed to the research, the implementation, and the patents behind a learning-based planning stack for Huawei’s self-driving system.',
+      'trained large planning models end to end over large public perception, prediction, and planning datasets, on distributed GPU runs.',
       'benchmarked imitation learning against reinforcement learning for planning; reproduced state-of-the-art papers as team baselines.',
-      'built a modular closed-loop CARLA simulator used for RL training and offline evaluation.',
-      'contributed to team patents on learning-based autonomy.',
+      'built a modular, RL-friendly closed-loop CARLA environment that materially cut iteration time across the team.',
     ],
   },
 ]
@@ -144,33 +173,54 @@ export const contributions = [
 
 export const research = [
   {
-    title: 'undergraduate thesis: autonomous racing',
+    title: 'learned online adaptation for autonomous racing',
+    kicker: 'undergraduate thesis',
+    titleUrl: 'https://www.tri.global/our-work/human-interactive-driving',
+    titleEmoji: '🏎️',
     orgSegs: [
       { t: 'Toronto Intelligent Systems Lab', url: 'https://tisl.cs.toronto.edu/' },
       { t: ' × ' },
       {
         t: 'Toyota Research Institute',
         url: 'https://www.tri.global/our-work/human-interactive-driving',
-        emoji: '🏎️',
+        chip: 'autonomy',
       },
     ],
-    when: '2022 → 2023',
+    when: 'sep 2022 → jun 2023',
     domain: 'autonomy',
-    points: [
-      'joint TISL and Toyota Research Institute project on autonomous racing.',
-      'learned online adaptation as track conditions shift at run time.',
-      'advised by Prof. Igor Gilitschenski (TISL).',
+    spec: [
+      ['question', ['can a racing vehicle adapt its own behaviour at run time, as conditions change underneath it?']],
+      ['approach', ['learned online adaptation, updating behaviour mid-run', 'no assumption that the track still matches training']],
+      ['setting', ['TISL, advised by Prof. Igor Gilitschenski', 'at the limit of handling, where grip decides the lap']],
     ],
   },
   {
-    title: 'machine learning summer researcher',
+    title: 'contraband detection in x-ray baggage scans',
+    kicker: 'machine learning summer researcher',
     orgSegs: [{ t: 'University of Toronto', url: 'https://www.utoronto.ca/' }],
     when: 'may → aug 2020',
     domain: 'models',
-    points: [
-      'evaluated 25+ detection models; lifted recall 10%.',
-      'shipped a 94%-recall real-time pipeline to Incheon Airport.',
-      'won a UofT fellowship award.',
+    spec: [
+      ['question', ['which architecture holds up when a missed threat costs far more than a false alarm?']],
+      ['approach', ['transfer learning, TensorFlow / Keras', 'led analysis and testing of 25+ detection and classification architectures', 'tuned the strongest for recall at real-time inference']],
+      ['result', ['+10% recall from the architecture study', '94% recall at real-time speed, deployed at Seoul–Incheon International Airport']],
+      ['outcome', ['secured follow-on research funding', 'UofT fellowship award']],
+    ],
+  },
+  {
+    title: 'satellite-imagery ML for malaria prevention',
+    kicker: 'junior machine learning engineer',
+    orgSegs: [
+      { t: 'Omdena', url: 'https://www.omdena.com/' },
+      { t: ' × ' },
+      { t: 'Zzapp Malaria', url: 'https://zzappmalaria.com/', chip: 'models' },
+    ],
+    when: 'jul → sep 2020',
+    domain: 'models',
+    spec: [
+      ['question', ['where should limited spraying effort go to prevent the most malaria?']],
+      ['approach', ['satellite imagery models, one of 50 global contributors']],
+      ['result', ['shipped into Zzapp’s planning tool, then an XPRIZE finalist', 'Zzapp went on to win the $5M IBM Watson AI XPRIZE']],
     ],
   },
 ]
@@ -183,21 +233,9 @@ export const projects = [
     when: '2021 → 2022',
     domain: 'autonomy',
     textSegs: [
-      { t: 'led vision pipelines for two ' },
-      { t: 'IGVC', url: 'http://www.igvc.org/' },
-      { t: ' competition rovers; deployed detection and classification with TorchScript; managed a 15-person team.' },
-    ],
-  },
-  {
-    title: 'junior machine learning engineer',
-    org: 'Omdena',
-    url: 'https://www.omdena.com/',
-    when: 'jul → sep 2020',
-    domain: 'models',
-    textSegs: [
-      { t: 'built satellite-imagery ML for malaria prevention with ' },
-      { t: 'Zzapp Malaria', url: 'https://zzappmalaria.com/' },
-      { t: ', winner of the $5M IBM Watson AI XPRIZE.' },
+      { t: 'built two rovers from scratch for the ' },
+      { t: 'Intelligent Ground Vehicle Competition', url: 'http://www.igvc.org/' },
+      { t: '; led a 15-person vision team on an agile cycle, deploying detection and classification with TorchScript.' },
     ],
   },
   {
@@ -215,33 +253,54 @@ export const education = {
   schoolUrl: 'https://www.utoronto.ca/',
   programUrl: 'https://engsci.utoronto.ca/',
   degree: 'BASc, Engineering Science (honors)',
-  detail: 'specialization in robotics and AI · minor in business · 2018 → 2023',
+  detail: 'robotics & AI · minor in business · 2018 → 2023',
 }
 
 export const skills = [
   {
-    group: 'machine learning',
+    group: 'models & training',
     domain: 'models',
-    items: ['PyTorch', 'HuggingFace', 'LLMs & RAG', 'fine-tuning (LoRA / PEFT)', 'quantization', 'computer vision'],
+    items: ['PyTorch', 'HuggingFace', 'LoRA / PEFT fine-tuning', 'post-training', 'quantization', 'distributed GPU training'],
   },
   {
-    group: 'real-time & voice ai',
+    group: 'inference & serving',
     domain: 'voice',
-    items: ['real-time streaming inference', 'TTS / STT voice models', 'WebRTC / LiveKit pipelines', 'latency & throughput optimization', 'ONNX Runtime'],
+    items: ['ONNX Runtime', 'real-time streaming inference', 'TTFT & latency profiling', 'WebRTC / LiveKit pipelines', 'TorchScript'],
+  },
+  {
+    group: 'problem domains',
+    domain: 'autonomy',
+    items: ['voice (TTS / STT)', 'LLMs & retrieval', 'computer vision', 'planning & control'],
   },
   {
     group: 'data & evaluation',
     domain: 'product',
-    items: ['dataset curation & labeling pipelines', 'eval harness & benchmark design', 'A/B testing', 'cost & capacity modeling'],
+    items: ['dataset curation', 'labeling pipelines', 'gold eval sets', 'adversarial test design', 'A/B testing', 'cost & capacity modeling'],
   },
   {
     group: 'ai-native development',
-    domain: 'autonomy',
+    domain: 'models',
     items: ['Claude Code', 'Cursor', 'Codex', 'MCP server design', 'context engineering', 'eval-gated agent workflows'],
   },
   {
     group: 'engineering',
-    domain: 'models',
+    domain: 'product',
     items: ['Python', 'SQL', 'Docker', 'CI/CD', 'AWS / GCP'],
   },
 ]
+
+export const coursework = {
+  courses: [
+    { t: 'deep learning & neural networks', meta: 'csc413 · graduate level', star: true },
+    { t: 'intro to machine learning' },
+    { t: 'control systems' },
+    { t: 'probability & statistics' },
+    { t: 'linear algebra' },
+    { t: 'data structures & algorithms' },
+  ],
+  footnote: 'csc413 was taught by Jimmy Ba, who went on to co-found xAI.',
+  honours: [
+    'multiple dean’s honours list',
+    'euclid math contest honour roll · ranked 13th',
+  ],
+}

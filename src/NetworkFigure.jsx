@@ -14,7 +14,7 @@ const LANE_STEP = 0.21
 const LAYERS = [
   {
     x: -1.62,
-    caption: 'input · signals',
+    caption: 'signals',
     nodes: [
       ['live call audio', 'voice', '#xp-sadie'],
       ['production call logs', 'voice', '#xp-sadie'],
@@ -27,7 +27,7 @@ const LAYERS = [
   },
   {
     x: -0.54,
-    caption: 'hidden · models',
+    caption: 'models',
     nodes: [
       ['streaming stt / tts', 'voice', '#skills'],
       ['turn-taking classifier', 'voice', '#xp-sadie'],
@@ -40,7 +40,7 @@ const LAYERS = [
   },
   {
     x: 0.54,
-    caption: 'hidden · practice',
+    caption: 'practice',
     nodes: [
       ['latency & ttft profiling', 'voice', '#contributions'],
       ['int8 quantization', 'voice', '#skills'],
@@ -54,7 +54,7 @@ const LAYERS = [
   },
   {
     x: 1.62,
-    caption: 'output · results',
+    caption: 'shipped',
     nodes: [
       ['22 ms first sentence', 'voice', '#xp-sadie'],
       ['1,500+ venues live', 'voice', '#xp-sadie'],
@@ -597,9 +597,7 @@ export default function NetworkFigure() {
       />
       <figcaption>
         <span className="netfig-cap">
-          fig. 01. a career as a forward pass. hover a node to trace what feeds it and
-          what it produced, drag a node to pull it out of its lane, expand to spread the
-          whole lattice, click to jump to a section.
+          my career as a forward pass. hover to trace a path, drag a node loose, click to jump.
         </span>
         <span className="netfig-controls">
           <button type="button" className="netfig-btn" onClick={runPass}>
