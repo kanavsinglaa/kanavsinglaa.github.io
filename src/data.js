@@ -26,6 +26,8 @@ export const intro = [
   { t: 'planning models', hl: 'autonomy' },
   { t: ' for self-driving cars at ' },
   { t: 'huawei’s noah’s ark lab', url: 'https://auto.huawei.com/en/ads', icon: '/logos/huawei.png' },
+  { t: ', which is where i learned to make an unreasonable number of gpus ' },
+  { t: 'go brrr', hl: 'models' },
   { t: '. the thread through all of it is ' },
   { t: 'ai and creativity', hl: 'models' },
   { t: ': i like hard problems and instruments that feel alive.' },
@@ -143,7 +145,7 @@ export const experience = [
     domain: 'autonomy',
     points: [
       'contributed to the research, the implementation, and the patents behind a learning-based planning stack for Huawei’s self-driving system.',
-      'trained large planning models end to end over large public perception, prediction, and planning datasets, on distributed GPU runs.',
+      'first place i made big models go brrr on big GPUs: distributed end-to-end training runs over large public perception, prediction, and planning datasets.',
       'benchmarked imitation learning against reinforcement learning for planning; reproduced state-of-the-art papers as team baselines.',
       'built a modular, RL-friendly closed-loop CARLA environment that materially cut iteration time across the team.',
     ],
