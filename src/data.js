@@ -87,7 +87,7 @@ export const experience = [
     sub: 'voice AI for hospitality, live in 1,500+ restaurants and hotels',
     when: 'apr 2026 → present',
     where: 'toronto',
-    domains: ['voice', 'models'],
+    domains: ['voice', 'models', 'product'],
     points: [
       'cut first-sentence latency 218 ms to 22 ms; benchmarked GPU endpoints to low-200 ms p50 time-to-first-token.',
       'fine-tune models for specific verticals so restaurants, hotels, and car rental each book in their own language.',
@@ -125,14 +125,13 @@ export const experience = [
     sub: 'ai founding engineer (2023) · ai solutions architect (2024) · ai solutions lead (2025)',
     when: 'jun 2023 → apr 2026',
     where: 'toronto',
-    domains: ['product'],
+    domains: ['product', 'models'],
     points: [
       'first AI hire at a serial software acquirer; built the M&A sourcing engine on LLM extraction and retrieval, funded by parent firm Valsef.',
-      'turned it into a repeatable sourcing engine, then extended the same extraction stack into diligence: data-room summarization, contract and ARR-schedule extraction, and support-ticket mining as an early churn signal.',
-      'ran AI initiatives across portfolio companies on the problems every vertical SaaS business has regardless of industry: support triage and deflection, document extraction, onboarding and data-migration mapping, and comprehension of inherited codebases.',
-      'shipped customer-facing AI features from prototype to revenue with portfolio SaaS teams.',
-      'learned the reusable asset is the harness, not the model: eval sets, labeling pipelines, deployment and cost patterns transfer across companies, while the last mile gets rebuilt per company. one shared platform across incompatible data models never ships.',
-      'grew from sole contributor to owning AI architecture across the portfolio, and set the evaluation bar every model cleared before it reached a customer.',
+      'ran AI across portfolio companies on what every vertical SaaS business needs: support triage, document extraction, data-migration mapping, and making sense of inherited codebases.',
+      'shipped customer-facing AI features from prototype to revenue.',
+      'the harness is what transfers between companies, not the model: eval sets, labeling pipelines, and cost patterns.',
+      'grew from sole contributor to owning AI architecture across the portfolio, and set the bar every model cleared before it reached a customer.',
     ],
   },
   {
