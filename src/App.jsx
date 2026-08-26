@@ -247,7 +247,7 @@ export default function App() {
           <div className="xp-list">
             {experience.map((xp) => (
               <article
-                className={`xp dom-${xp.domain}`}
+                className={`xp dom-${xp.domains[0]}`}
                 key={xp.id}
                 id={`xp-${xp.id}`}
                 data-reveal
@@ -255,7 +255,9 @@ export default function App() {
                 <div className="xp-meta">
                   <p className="xp-when">{xp.when}</p>
                   <p className="xp-where">{xp.where}</p>
-                  <Tag domain={xp.domain} />
+                  <span className="xp-tags">
+                    {xp.domains.map((d) => <Tag domain={d} key={d} />)}
+                  </span>
                 </div>
                 <div className="xp-body">
                   <h3>
