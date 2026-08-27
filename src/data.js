@@ -130,7 +130,7 @@ export const experience = [
       'first AI hire at a serial software acquirer; built the M&A sourcing engine on LLM extraction and retrieval, funded by parent firm Valsef.',
       'ran AI across portfolio companies on what every vertical SaaS business needs: support triage, document extraction, data-migration mapping, and making sense of inherited codebases.',
       'shipped customer-facing AI features from prototype to revenue.',
-      'the harness is what transfers between companies, not the model: eval sets, labeling pipelines, and cost patterns.',
+      'built the harness, not just the model: eval sets, labeling pipelines, and cost patterns that transfer between companies.',
       'grew from sole contributor to owning AI architecture across the portfolio, and set the bar every model cleared before it reached a customer.',
     ],
   },
@@ -263,7 +263,18 @@ export const skills = [
   {
     group: 'models & training',
     domain: 'models',
-    items: ['PyTorch', 'HuggingFace', 'LoRA / PEFT fine-tuning', 'post-training', 'quantization', 'distributed GPU training'],
+    items: [
+      'PyTorch',
+      'HuggingFace',
+      'TensorFlow / Keras',
+      'LoRA / PEFT fine-tuning',
+      'post-training',
+      'quantization',
+      'distributed GPU training',
+      'transfer learning',
+      'imitation & reinforcement learning',
+      'closed-loop evaluation',
+    ],
   },
   {
     group: 'inference & serving',

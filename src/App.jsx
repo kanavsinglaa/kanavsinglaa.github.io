@@ -87,16 +87,6 @@ function ThemeToggle() {
   )
 }
 
-function Tag({ domain }) {
-  const names = {
-    voice: 'voice & inference',
-    models: 'models & training',
-    product: 'product & business',
-    autonomy: 'autonomy & robotics',
-  }
-  return <span className={`tag hl-${domain}`}>{names[domain]}</span>
-}
-
 function SectionHead({ title, note }) {
   return (
     <header className="sec-head" data-reveal>
@@ -255,9 +245,6 @@ export default function App() {
                 <div className="xp-meta">
                   <p className="xp-when">{xp.when}</p>
                   <p className="xp-where">{xp.where}</p>
-                  <span className="xp-tags">
-                    {xp.domains.map((d) => <Tag domain={d} key={d} />)}
-                  </span>
                 </div>
                 <div className="xp-body">
                   <h3>
@@ -292,7 +279,6 @@ export default function App() {
               <article className={`xp dom-${r.domain}`} key={i} data-reveal>
                 <div className="xp-meta">
                   <p className="xp-when">{r.when}</p>
-                  <Tag domain={r.domain} />
                 </div>
                 <div className="xp-body">
                   {r.kicker && <p className="rx-kicker">{r.kicker}</p>}
@@ -346,7 +332,7 @@ export default function App() {
 
         <section id="contributions" className="sec">
           <SectionHead title="contributions"
-            note="what i keep coming back to."
+            note="where i have made a sizable impact."
           />
           <ol className="contribs">
             {contributions.map((c) => (
