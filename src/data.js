@@ -84,7 +84,7 @@ export const experience = [
     role: 'models & inference',
     org: 'Sadie AI',
     url: 'https://www.heysadie.ai/',
-    sub: 'voice AI for hospitality, live in 1,500+ restaurants and hotels',
+    sub: 'voice AI for hospitality, live in 1,500+ restaurants and hotels · a Valsoft company',
     when: 'apr 2026 → present',
     where: 'toronto',
     domains: ['voice', 'models', 'product'],
@@ -123,7 +123,7 @@ export const experience = [
     org: 'Valsoft / Aspire Software',
     url: 'https://www.valsoftcorp.com/ai-labs/ai-ventures',
     sub: 'ai founding engineer (2023) · ai solutions architect (2024) · ai solutions lead (2025)',
-    when: 'jun 2023 → apr 2026',
+    when: 'jun 2023 → present',
     where: 'toronto',
     domains: ['product', 'models'],
     points: [

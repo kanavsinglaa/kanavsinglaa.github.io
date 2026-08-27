@@ -185,7 +185,6 @@ export default function NetworkFigure() {
     offsets: new Map(), // node -> {dx, dy} once a viewer pulls it out of place
     pulling: null,
   })
-  const [ms, setMs] = useState(null)
   const [touched, setTouched] = useState(false)
 
   const runPass = () => {
@@ -335,8 +334,6 @@ export default function NetworkFigure() {
         const t = Math.min((now - s.passStart) / PASS_MS, 1)
         const eased = t * t * (3 - 2 * t)
         front = -1.85 + eased * 3.7
-        const shown = Math.round(22 * eased)
-        setMs((prev) => (prev === shown ? prev : shown))
         if (t >= 1) s.passDone = true
       }
 
@@ -631,10 +628,6 @@ export default function NetworkFigure() {
               ⟲ reset layout
             </button>
           )}
-          <span className="netfig-ms" aria-live="polite">
-            {ms === null ? 'ttft: idle' : `ttft: ${ms} ms`}
-            {ms === 22 && <s> 218 ms</s>}
-          </span>
         </span>
       </figcaption>
     </figure>
