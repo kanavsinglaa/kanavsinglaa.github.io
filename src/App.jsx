@@ -49,40 +49,87 @@ function resolvedTheme() {
   return document.documentElement.dataset.theme || 'dark'
 }
 
-const SunIcon = () => (
-  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
-       strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="4.4" />
-    <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6" />
-  </svg>
-)
+/* A window with a blind: pull it down and the page goes dark, raise it and the
+   day comes back. Dragging is the fun path; click and keyboard do the same job. */
+function ThemeWindow() {
+  const [dark, setDark] = useState(() => resolvedTheme() === 'dark')
+  const [p, setP] = useState(() => (resolvedTheme() === 'dark' ? 1 : 0)) // blind coverage
+  const [dragging, setDragging] = useState(false)
+  const ref = useRef(null)
+  const drag = useRef(null)
 
-const MoonIcon = () => (
-  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
-       strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M20.2 14.6A8.6 8.6 0 1 1 9.4 3.8a6.9 6.9 0 0 0 10.8 10.8Z" />
-  </svg>
-)
-
-function ThemeToggle() {
-  const [theme, setTheme] = useState(resolvedTheme)
-  const flip = () => {
-    const next = theme === 'dark' ? 'light' : 'dark'
-    document.documentElement.dataset.theme = next
-    try { localStorage.setItem('theme', next) } catch (e) { /* private mode */ }
-    setTheme(next)
+  const apply = (isDark) => {
+    setDark(isDark)
+    const root = document.documentElement
+    if (isDark) root.dataset.theme = 'dark'
+    else root.dataset.theme = 'light'
+    try { localStorage.setItem('theme', isDark ? 'dark' : 'light') } catch (e) { /* private mode */ }
   }
-  const toLight = theme === 'dark'
+
+  const settle = (next) => {
+    setP(next ? 1 : 0)
+    if (next !== dark) apply(next)
+  }
+
+  const onPointerDown = (e) => {
+    const el = ref.current
+    if (!el) return
+    el.setPointerCapture(e.pointerId)
+    drag.current = { y: e.clientY, p, moved: false, range: el.getBoundingClientRect().height * 0.7 }
+    setDragging(true)
+  }
+
+  const onPointerMove = (e) => {
+    const d = drag.current
+    if (!d) return
+    const dy = e.clientY - d.y
+    if (Math.abs(dy) > 3) d.moved = true
+    const next = Math.min(1, Math.max(0, d.p + dy / d.range))
+    setP(next)
+    // the page recolours as the blind crosses the halfway mark
+    const shouldBeDark = next > 0.5
+    if (shouldBeDark !== dark) apply(shouldBeDark)
+  }
+
+  const onPointerUp = () => {
+    const d = drag.current
+    drag.current = null
+    setDragging(false)
+    if (!d) return
+    if (!d.moved) settle(!dark)      // a click, not a drag
+    else settle(p > 0.5)             // snap to whichever end is closer
+  }
+
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); settle(!dark) }
+    if (e.key === 'ArrowDown') { e.preventDefault(); settle(true) }
+    if (e.key === 'ArrowUp') { e.preventDefault(); settle(false) }
+  }
+
   return (
     <button
       type="button"
-      className="theme-toggle"
-      onClick={flip}
-      aria-label={toLight ? 'switch to light mode' : 'switch to dark mode'}
-      title={toLight ? 'switch to light mode' : 'switch to dark mode'}
+      ref={ref}
+      className={`theme-window${dragging ? ' is-dragging' : ''}`}
+      style={{ '--p': p }}
+      role="switch"
+      aria-checked={dark}
+      aria-label={dark ? 'raise the blind for light mode' : 'lower the blind for dark mode'}
+      title={dark ? 'raise the blind' : 'pull the blind down'}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      onKeyDown={onKeyDown}
     >
-      {toLight ? <SunIcon /> : <MoonIcon />}
-      <span className="theme-word">{toLight ? 'light' : 'dark'}</span>
+      <span className="tw-glass" aria-hidden="true">
+        <span className="tw-sky" />
+        <span className="tw-disc" />
+        <span className="tw-stars" />
+      </span>
+      <span className="tw-blind" aria-hidden="true" />
+      <span className="tw-cord" aria-hidden="true" />
+      <span className="tw-frame" aria-hidden="true" />
     </button>
   )
 }
@@ -192,7 +239,7 @@ export default function App() {
             </a>
           ))}
           <a href={contact.resume} className="nav-link nav-resume" target="_blank" rel="noreferrer">resume ↗</a>
-          <ThemeToggle />
+          <ThemeWindow />
         </div>
       </nav>
 
