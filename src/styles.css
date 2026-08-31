@@ -103,139 +103,23 @@ a:focus-visible, button:focus-visible {
 .nav-brand { display: flex; align-items: center; gap: 10px; }
 .nav-avatar { width: 26px; height: 26px; border-radius: 6px; display: block; }
 .nav-name { color: var(--faint); font-size: 12px; }
-/* ---------- the window: a blind you pull to change the light ---------- */
-.theme-window {
-  --p: 1;                     /* how far the blind is down, 0 to 1 */
-  position: relative;
-  width: 44px;
-  height: 48px;
-  padding: 0;
-  border: 0;
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
   background: none;
-  cursor: grab;
-  align-self: center;         /* the nav aligns on baselines; this sits centred */
-  margin-left: 4px;
-  touch-action: none;         /* a vertical drag pulls the blind, never scrolls */
-  -webkit-tap-highlight-color: transparent;
-  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 4px 9px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
-.theme-window:active, .theme-window.is-dragging { cursor: grabbing; }
-
-.tw-glass {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: 7px 7px 3px 3px;
-}
-.tw-sky {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(#0d1730 0%, #1b2a4a 55%, #2c3f63 100%);
-  transition: background 0.6s ease;
-}
-:root[data-theme='light'] .tw-sky {
-  background: linear-gradient(#7fb6ea 0%, #b8d9f4 52%, #e7f0f7 100%);
-}
-/* sun by day, moon by night, same disc */
-.tw-disc {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #e9e4c9;
-  box-shadow: 0 0 9px 2px rgba(233, 228, 201, 0.45);
-  transition: background 0.6s ease, box-shadow 0.6s ease, transform 0.6s ease;
-}
-:root[data-theme='light'] .tw-disc {
-  background: #ffd980;
-  box-shadow: 0 0 11px 4px rgba(255, 217, 128, 0.55);
-  transform: translateY(2px);
-}
-.tw-stars {
-  position: absolute;
-  inset: 0;
-  opacity: 1;
-  transition: opacity 0.6s ease;
-  background-image:
-    radial-gradient(1px 1px at 20% 24%, #fff 99%, transparent),
-    radial-gradient(1px 1px at 63% 16%, #e8ecff 99%, transparent),
-    radial-gradient(1px 1px at 34% 58%, #fff 99%, transparent),
-    radial-gradient(1px 1px at 76% 66%, #dfe6ff 99%, transparent),
-    radial-gradient(1px 1px at 12% 78%, #fff 99%, transparent);
-}
-:root[data-theme='light'] .tw-stars { opacity: 0; }
-
-/* the blind itself, slatted, hanging from the top */
-.tw-blind {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: calc(var(--p) * 100%);
-  border-radius: 7px 7px 2px 2px;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0)) ,
-    repeating-linear-gradient(#efe7d4 0 3px, #e2d9c4 3px 6px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.28);
-  transition: height 0.5s cubic-bezier(0.22, 0.7, 0.2, 1);
-}
-:root[data-theme='dark'] .tw-blind {
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)),
-    repeating-linear-gradient(#cfc7b4 0 3px, #bdb5a2 3px 6px);
-}
-.theme-window.is-dragging .tw-blind,
-.theme-window.is-dragging .tw-cord { transition: none; }
-
-/* the pull cord, so it reads as draggable */
-.tw-cord {
-  position: absolute;
-  left: 50%;
-  top: calc(var(--p) * 100%);
-  width: 1px;
-  height: 5px;
-  margin-left: -0.5px;
-  background: rgba(0, 0, 0, 0.45);
-  transition: top 0.5s cubic-bezier(0.22, 0.7, 0.2, 1);
-}
-.tw-cord::after {
-  content: '';
-  position: absolute;
-  left: -2px;
-  bottom: -3px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #efe7d4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.tw-frame {
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid var(--line);
-  border-radius: 7px 7px 3px 3px;
-  pointer-events: none;
-}
-.tw-frame::after {           /* the sill */
-  content: '';
-  position: absolute;
-  left: -2px;
-  right: -2px;
-  bottom: -3px;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--line);
-}
-.theme-window:hover .tw-frame { border-color: var(--muted); }
-.theme-window:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .tw-blind, .tw-cord, .tw-sky, .tw-disc, .tw-stars { transition: none; }
-}
-
+.theme-toggle svg { display: block; }
+.theme-word { letter-spacing: 0.1em; text-transform: uppercase; font-size: 10.5px; }
+.theme-toggle:hover { border-color: var(--ink); color: var(--ink); }
 .nav-links { display: flex; gap: 14px; flex-wrap: wrap; }
 .nav-link {
   font-size: 13px;
@@ -841,7 +725,3 @@ a:focus-visible, button:focus-visible {
 }
 
 .xp-tags .tag + .tag { margin-top: 0; }
-
-@media (max-width: 620px) {
-  .theme-window { width: 38px; height: 42px; }
-}
