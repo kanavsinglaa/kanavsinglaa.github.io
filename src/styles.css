@@ -178,11 +178,21 @@ a:focus-visible, button:focus-visible {
 /* ---------- network figure ---------- */
 .netfig { width: 100%; min-width: 0; }
 
-.netfig canvas {
+.netfig-plate {
   width: 100%;
   display: block;
   touch-action: none;
 }
+/* nodes dragged clear of the plate are drawn here, over the page itself */
+.netfig-loose {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  pointer-events: none;
+  visibility: hidden; /* shown only while something is actually out on the page */
+}
+body.is-pulling { user-select: none; -webkit-user-select: none; }
 .netfig figcaption {
   margin-top: 16px;
   display: flex;
@@ -452,6 +462,20 @@ a:focus-visible, button:focus-visible {
 .disc-item:hover::before,
 .project:hover::before,
 .skill-group:hover::before { opacity: 0.85; transform: scaleY(1); }
+
+/* a node from the figure is out here, standing on this block */
+.is-pointed::before { opacity: 0.9; transform: scaleY(1); }
+.sec.is-pointed .sec-head { position: relative; }
+.sec.is-pointed .sec-head::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  background: var(--dom, var(--line));
+  opacity: 0.9;
+}
 
 /* ---------- blocks arrive as you reach them ---------- */
 .has-reveal [data-reveal] {
