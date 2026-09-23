@@ -84,7 +84,7 @@ export const experience = [
     role: 'models & inference',
     org: 'Sadie AI',
     url: 'https://www.heysadie.ai/',
-    sub: 'voice AI for hospitality, live in 1,500+ restaurants and hotels · a Valsoft company',
+    sub: 'voice AI for hospitality, live in 3,000+ restaurants and hotels · a Valsoft company',
     when: 'apr 2026 → present',
     where: 'toronto',
     domains: ['voice', 'models', 'product'],
@@ -158,7 +158,7 @@ export const contributions = [
     n: '01',
     title: 'hard problems in hospitality',
     domain: 'product',
-    text: 'messy, real-world demand, solved in production: voice agents live in 1,500+ restaurants and hotels, dynamic pricing running on 150+ properties, and a platform i co-founded that went from zero to half a million arr in a year.',
+    text: 'messy, real-world demand, solved in production: voice agents live in 3,000+ restaurants and hotels, dynamic pricing running on 150+ properties, and a platform i co-founded that went from zero to half a million arr in a year.',
   },
   {
     n: '02',

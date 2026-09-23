@@ -57,7 +57,7 @@ const LAYERS = [
     caption: 'shipped',
     nodes: [
       ['22 ms first sentence', 'voice', '#xp-sadie'],
-      ['1,500+ venues live', 'voice', '#xp-sadie'],
+      ['3,000+ venues live', 'voice', '#xp-sadie'],
       ['−55% llm spend', 'voice', '#xp-sadie'],
       ['94% recall @ incheon', 'models', '#research'],
       ['$500k arr', 'product', '#xp-ampliphi'],
@@ -101,11 +101,11 @@ const EDGES = [
 
   // practice → results
   ['latency & ttft profiling', '22 ms first sentence'],
-  ['latency & ttft profiling', '1,500+ venues live'],
+  ['latency & ttft profiling', '3,000+ venues live'],
   ['int8 quantization', '22 ms first sentence'],
   ['int8 quantization', '−55% llm spend'],
   ['inference cost modeling', '−55% llm spend'],
-  ['gold eval sets', '1,500+ venues live'],
+  ['gold eval sets', '3,000+ venues live'],
   ['gold eval sets', '$500k arr'],
   ['gold eval sets', 'self-driving planner'],
   ['dataset curation', '94% recall @ incheon'],
